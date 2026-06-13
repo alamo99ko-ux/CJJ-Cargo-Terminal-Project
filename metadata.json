@@ -1,0 +1,6 @@
+{
+  "name": "CJJ Cargo Terminal Project",
+  "description": "청주국제공항 화물터미널 활성화를 위한 타당성 분석, 경제성 모델 시뮬레이션 및 마스터플랜 제안 도구",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

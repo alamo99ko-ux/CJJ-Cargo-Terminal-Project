@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* A4 용지 세로 출력 최적화 */
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+
+  /* 인쇄 비대상 요소 감춤 (최상단 헤더, 네비게이션, 버튼, 푸터 등) */
+  #main-header,
+  header,
+  footer,
+  #main-footer,
+  .no-print,
+  button,
+  .print-hidden,
+  section:first-of-type,
+  .normal-tabs-nav,
+  .normal-tabs-area > div:first-child,
+  .print-all-container {
+    display: none !important;
+  }
+
+  /* -------------------------------------------------------------
+     [1. 첫페이지/요약본만 인쇄 모드: print-summary-mode]
+     ------------------------------------------------------------- */
+  body.print-summary-mode #main-header,
+  body.print-summary-mode header,
+  body.print-summary-mode section:first-of-type {
+    display: block !important;
+  }
+  body.print-summary-mode .normal-tabs-area,
+  body.print-summary-mode .normal-tabs-content {
+    display: none !important;
+  }
+  
+  /* 헤더와 요약본이 A4 한 장에 온전히 잘 들어가도록 여백 및 폰트 크기 조정 */
+  body.print-summary-mode #main-header {
+    background-color: #0f172a !important; /* slate-900 */
+    color: #ffffff !important;
+    padding: 8mm !important;
+    border-bottom: 4px solid #2563eb !important;
+    margin-bottom: 5mm !important;
+  }
+
+  body.print-summary-mode #main-header span,
+  body.print-summary-mode #main-header h1,
+  body.print-summary-mode #main-header p {
+    color: #ffffff !important;
+  }
+
+  body.print-summary-mode #main-header .text-slate-400 {
+    color: #cbd5e1 !important;
+  }
+
+  body.print-summary-mode section:first-of-type {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 8mm !important;
+    margin-bottom: 0 !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* 배경색 초기화 및 글자색을 명확한 검은색으로 */
+  body, html, #root {
+    background: #ffffff !important;
+    color: #000000 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 스타일 씌워진 페이퍼 형태를 가득 펼침 */
+  #styled-paper {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* overflow / max-height 로 인한 인쇄 끊김 제거 */
+  .overflow-y-auto,
+  .max-h-\[75vh\],
+  .max-h-\[80vh\],
+  .max-h-\[90vh\] {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* 페이지 내 요소가 끊기지 않고 연속되도록 */
+  .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* 명확한 쪽 나눔이 필요할 때 */
+  .print-page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* FAQ 인쇄 시 아코디언 강제 전체 전개 */
+  .overflow-hidden {
+    max-height: none !important;
+    opacity: 100 !important;
+  }
+}
