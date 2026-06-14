@@ -44,7 +44,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans block text-slate-900 selection:bg-slate-200">
       {/* 최고급 정책 자문용 헤더 - Editorial/Strategic Edition */}
-      <header className="bg-slate-900 text-white border-b-4 border-blue-600 sticky top-0 z-50 shadow-md" id="main-header">
+      <header className="bg-blue-50 text-blue-900 border-b border-blue-200 sticky top-0 z-50 shadow-sm" id="main-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="bg-blue-600 p-2.5 rounded-sm text-white shadow-sm shrink-0">
@@ -52,31 +52,31 @@ export default function App() {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="bg-blue-500/20 text-blue-300 text-[10px] tracking-widest font-mono font-bold px-2.5 py-0.5 rounded-sm uppercase">
+                <span className="bg-blue-500/10 text-blue-700 text-[10px] tracking-widest font-mono font-bold px-2.5 py-0.5 rounded-sm uppercase">
                   Strategic Proposal | 2026.06
                 </span>
-                <span className="flex items-center gap-0.5 text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-sm border border-amber-500/20 font-mono uppercase tracking-widest">
+                <span className="flex items-center gap-0.5 text-[10px] text-blue-800 bg-blue-500/10 px-2 py-0.5 rounded-sm border border-blue-500/20 font-mono uppercase tracking-widest">
                   <Sparkles className="h-3 w-3" />
                   PROPOSAL ADVISORY
                 </span>
               </div>
-              <h1 className="text-xl md:text-2xl font-black text-white tracking-tight mt-1 font-serif">
-                Cheongju Airport (CJJ) Cargo Hub Strategy <span className="font-sans text-sm font-normal text-slate-400">| 청주국제공항 항공물류 활성화</span>
+              <h1 className="text-xl md:text-2xl font-black text-blue-950 tracking-tight mt-1 font-serif">
+                Cheongju Airport (CJJ) Cargo Hub Strategy <span className="font-sans text-sm font-normal text-blue-700">| 청주국제공항 항공물류 활성화</span>
               </h1>
             </div>
           </div>
 
           {/* 컨설턴트 및 조종사 정보 & 처음 보이는 화면 PDF 출력 버튼 */}
           <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
-            <div className="text-left md:text-right border-l-2 md:border-l-0 md:border-r-2 border-slate-700 pl-3 md:pl-0 md:pr-4 py-0.5 max-w-sm">
-              <p className="text-xs font-bold text-white leading-tight font-serif italic">Prepared by Seunghee Ko</p>
-              <p className="text-[10px] text-slate-400 font-sans uppercase tracking-widest mt-1">
+            <div className="text-left md:text-right border-l-2 md:border-l-0 md:border-r-2 border-slate-300 pl-3 md:pl-0 md:pr-4 py-0.5 max-w-sm">
+              <p className="text-xs font-bold text-blue-950 leading-tight font-serif italic">Prepared by Seunghee Ko</p>
+              <p className="text-[10px] text-blue-600 font-sans uppercase tracking-widest mt-1">
                 고승희 기장 · 30년 운항 경력 조종사
               </p>
             </div>
             <button
               onClick={handlePrintSummary}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-sm text-xs font-bold cursor-pointer transition-colors bg-orange-400 hover:bg-orange-500 text-white shadow-sm border border-orange-300 no-print"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-sm text-xs font-bold cursor-pointer transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-sm border border-blue-500 no-print"
               id="btn-print-first"
             >
               <Printer className="h-3.5 w-3.5" />
@@ -109,7 +109,7 @@ export default function App() {
               </button>
             </div>
             <h2 className="text-xl md:text-3xl font-black text-slate-950 font-serif leading-tight tracking-tight">
-              “활주로 연장이나 신설 주장이 우선이 아니고,<br/>
+              “활주로 연장이나 신설이 우선이 아니고,<br/>
               <span className="underline decoration-blue-500 decoration-3">화물 전용 터미널의 실질적 가동</span>에 있습니다.”
             </h2>
             <p className="text-slate-650 text-sm leading-relaxed text-justify">
@@ -156,52 +156,52 @@ export default function App() {
             </div>
           </div>
 
-          <div className="bg-slate-900 text-white p-6 rounded-sm border border-slate-800 flex flex-col justify-between space-y-6">
+          <div className="bg-blue-50 text-blue-900 p-6 rounded-sm border border-blue-100 flex flex-col justify-between space-y-6">
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-blue-400 font-mono tracking-widest uppercase">CJJ Terminal Corp.</p>
-              <h3 className="font-serif font-black text-base text-white">중부권 국가물류 다핵화(2Hub) 기여</h3>
+              <p className="text-[10px] font-bold text-blue-600 font-mono tracking-widest uppercase">CJJ Terminal Corp.</p>
+              <h3 className="font-serif font-black text-base text-blue-950">중부권 국가물류 다핵화(2Hub) 기여</h3>
             </div>
-            <div className="space-y-2.5 text-xs text-slate-350 block">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <div className="space-y-2.5 text-xs text-blue-800 block">
+              <div className="flex items-center justify-between border-b border-blue-200 pb-1.5">
                 <span>청주공항 현재 처리한계</span>
-                <span className="font-bold text-white font-mono">연 3.8만 톤</span>
+                <span className="font-bold text-blue-950 font-mono">연 3.8만 톤</span>
               </div>
-              <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 text-blue-400">
+              <div className="flex items-center justify-between border-b border-blue-200 pb-1.5 text-blue-700">
                 <span>향후 년간 16만톤 처리능력 목표</span>
-                <span className="font-bold font-mono text-white">연 16만 톤</span>
+                <span className="font-bold font-mono text-blue-950">연 16만 톤</span>
               </div>
-              <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+              <div className="flex items-center justify-between border-b border-blue-200 pb-1.5">
                 <span>충북 산단 항공수요 잠재액</span>
-                <span className="font-bold text-white font-mono text-right leading-tight">
+                <span className="font-bold text-blue-950 font-mono text-right leading-tight">
                   연 308.8억 달러
                   <br />
-                  <span className="text-[10px] text-orange-400 font-sans font-normal block mt-1">
+                  <span className="text-[10px] text-blue-600 font-sans font-normal block mt-1">
                     (약 46조 3,200억 원 / KRW)
                   </span>
                 </span>
               </div>
-              <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+              <div className="flex items-center justify-between border-b border-blue-200 pb-1.5">
                 <span className="text-left">
                   인천공항 O&D
-                  <span className="text-[9px] text-slate-400 block font-sans">
+                  <span className="text-[9px] text-blue-600 block font-sans">
                     (Origin & Destination: 기점 및 종점 화물)
                   </span>
                   청주 수용능력
                 </span>
-                <span className="font-bold text-blue-400 font-mono">최대 30% 가능</span>
+                <span className="font-bold text-blue-700 font-mono">최대 30% 가능</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-left text-slate-400">
+                <span className="text-left text-blue-700">
                   현재 실제 수용률
-                  <span className="text-[9px] text-slate-500 block font-sans">
+                  <span className="text-[9px] text-blue-600 block font-sans">
                     (현재 화물 정기운항 전무 및 시설 마비)
                   </span>
                 </span>
-                <span className="font-bold text-rose-500 font-mono">0% (연 0톤)</span>
+                <span className="font-bold text-rose-600 font-mono">0% (연 0톤)</span>
               </div>
             </div>
-            <div className="h-px bg-slate-805"></div>
-            <p className="text-[10px] text-slate-400 italic">
+            <div className="h-px bg-blue-200"></div>
+            <p className="text-[10px] text-blue-600 italic">
               ※ 여객시설과 달리 화물시설(검색기, 콜드체인 등)은 운영 법인이 직접 구비 투자하여 즉시 개통해야 합니다.
             </p>
           </div>
@@ -224,10 +224,10 @@ export default function App() {
             </button>
             <button
               onClick={() => setActiveTab("simulator")}
-              className={`flex items-center gap-2 px-5 py-3 text-xs md:text-sm font-black cursor-pointer transition-all uppercase tracking-tight border-b-4 -mb-[10px] ${
+              className={`animate-pulse-subtle flex items-center gap-2 px-5 py-3 text-xs md:text-sm font-black cursor-pointer transition-all uppercase tracking-tight border-b-4 -mb-[10px] ${
                 activeTab === "simulator"
-                  ? "border-blue-600 text-blue-800 bg-white shadow-sm font-black"
-                  : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-white/40"
+                  ? "border-blue-600 text-blue-900 bg-white shadow-sm font-black"
+                  : "border-transparent text-slate-600 hover:text-blue-900 bg-blue-100 hover:bg-blue-200"
               }`}
               id="tab-simulator"
             >
@@ -236,10 +236,10 @@ export default function App() {
             </button>
             <button
               onClick={() => setActiveTab("roadmap")}
-              className={`flex items-center gap-2 px-5 py-3 text-xs md:text-sm font-black cursor-pointer transition-all uppercase tracking-tight border-b-4 -mb-[10px] ${
+              className={`animate-pulse-subtle flex items-center gap-2 px-5 py-3 text-xs md:text-sm font-black cursor-pointer transition-all uppercase tracking-tight border-b-4 -mb-[10px] ${
                 activeTab === "roadmap"
-                  ? "border-blue-600 text-blue-800 bg-white shadow-sm font-black"
-                  : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-white/40"
+                  ? "border-blue-600 text-blue-900 bg-white shadow-sm font-black"
+                  : "border-transparent text-slate-600 hover:text-green-900 bg-green-100 hover:bg-green-200"
               }`}
               id="tab-roadmap"
             >
@@ -248,10 +248,10 @@ export default function App() {
             </button>
             <button
               onClick={() => setActiveTab("faq")}
-              className={`flex items-center gap-2 px-5 py-3 text-xs md:text-sm font-black cursor-pointer transition-all uppercase tracking-tight border-b-4 -mb-[10px] ${
+              className={`animate-pulse-subtle flex items-center gap-2 px-5 py-3 text-xs md:text-sm font-black cursor-pointer transition-all uppercase tracking-tight border-b-4 -mb-[10px] ${
                 activeTab === "faq"
-                  ? "border-blue-600 text-blue-800 bg-white shadow-sm font-black"
-                  : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-white/40"
+                  ? "border-blue-600 text-blue-900 bg-white shadow-sm font-black"
+                  : "border-transparent text-slate-600 hover:text-purple-900 bg-purple-100 hover:bg-purple-200"
               }`}
               id="tab-faq"
             >
@@ -271,11 +271,11 @@ export default function App() {
       </main>
 
       {/* 우아한 풋터 */}
-      <footer className="bg-slate-900 border-t-2 border-slate-800 text-slate-400 py-12 mt-16" id="main-footer">
+      <footer className="bg-blue-50 border-t border-blue-200 text-blue-800 py-12 mt-16" id="main-footer">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
-          <p className="text-sm font-semibold text-slate-200 font-serif">청주공항 항공물류 정상화 기획 포털 및 마스터플랜 시뮬레이터</p>
-          <p className="text-xs text-slate-500">이 포털은 충청북도의 제2항공화물 거점공항 육성 및 국토 균형 발전과 아시아 이커머스 수렴을 위해 항공조종사단 연대 주도로 제안 수립되었습니다.</p>
-          <p className="text-[10px] text-slate-600 pt-4">© {new Date().getFullYear()} Skyking Air Co., Ltd. All Rights Reserved.</p>
+          <p className="text-sm font-semibold text-blue-950 font-serif">청주공항 항공물류 정상화 기획 포털 및 마스터플랜 시뮬레이터</p>
+          <p className="text-xs text-blue-700">이 포털은 충청북도의 제2항공화물 거점공항 육성 및 국토 균형 발전과 아시아 이커머스 수렴을 위해 항공조종사단 연대 주도로 제안 수립되었습니다.</p>
+          <p className="text-[10px] text-blue-500 pt-4">© {new Date().getFullYear()} Skyking Air Co., Ltd. All Rights Reserved.</p>
         </div>
       </footer>
     </div>

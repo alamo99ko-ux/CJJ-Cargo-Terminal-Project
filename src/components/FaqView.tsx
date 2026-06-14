@@ -54,10 +54,21 @@ const FAQ_ITEMS: FAQItem[] = [
 ];
 
 export default function FaqView() {
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const [openIndices, setOpenIndices] = useState<number[]>([0]);
+  const isAllOpen = openIndices.length === FAQ_ITEMS.length;
 
   const toggleFaq = (idx: number) => {
-    setOpenIdx(openIdx === idx ? null : idx);
+    setOpenIndices((prev) =>
+      prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx]
+    );
+  };
+
+  const toggleAll = () => {
+    if (isAllOpen) {
+      setOpenIndices([]);
+    } else {
+      setOpenIndices(FAQ_ITEMS.map((_, i) => i));
+    }
   };
 
   return (
@@ -68,20 +79,28 @@ export default function FaqView() {
           <HelpCircle className="h-5 w-5 text-slate-700" />
           <span className="font-bold text-slate-800 tracking-tight font-serif text-sm">청주공항 항공물류 활성화 핵심 11문 11답</span>
         </div>
-        <button
-          onClick={() => {
-            if ((window as any).runPrintMode) {
-              (window as any).runPrintMode("tab");
-            } else {
-              window.print();
-            }
-          }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-bold cursor-pointer transition-colors bg-orange-400 hover:bg-orange-500 text-white shadow-sm"
-          id="btn-faq-print-pdf"
-        >
-          <Printer className="h-3.5 w-3.5" />
-          <span>PDF 출력</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={toggleAll}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-bold cursor-pointer transition-colors bg-slate-700 hover:bg-slate-800 text-white shadow-sm"
+          >
+            {isAllOpen ? "전체닫기" : "전체열기"}
+          </button>
+          <button
+            onClick={() => {
+              if ((window as any).runPrintMode) {
+                (window as any).runPrintMode("tab");
+              } else {
+                window.print();
+              }
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-bold cursor-pointer transition-colors bg-orange-400 hover:bg-orange-500 text-white shadow-sm"
+            id="btn-faq-print-pdf"
+          >
+            <Printer className="h-3.5 w-3.5" />
+            <span>PDF 출력</span>
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-none shadow-sm border border-slate-200 p-6 md:p-8" id="faq-section">
@@ -92,7 +111,7 @@ export default function FaqView() {
 
       <div className="space-y-4">
         {FAQ_ITEMS.map((faq, idx) => {
-          const isOpen = openIdx === idx;
+          const isOpen = openIndices.includes(idx);
           return (
             <div
               key={idx}
@@ -103,7 +122,7 @@ export default function FaqView() {
             >
               <button
                 onClick={() => toggleFaq(idx)}
-                className="w-full px-5 py-4 flex items-center justify-between gap-4 text-left font-black text-slate-900 text-sm md:text-base cursor-pointer focus:outline-none font-serif"
+                className="faq-button w-full px-5 py-4 flex items-center justify-between gap-4 text-left font-black text-slate-900 text-sm md:text-base cursor-pointer focus:outline-none font-serif bg-blue-50"
               >
                 <span>{faq.q}</span>
                 {isOpen ? (

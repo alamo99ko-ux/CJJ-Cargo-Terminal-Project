@@ -401,47 +401,47 @@ export default function SimulatorView() {
       {/* 오른쪽 결과 종합 패널 */}
       <div className="space-y-6">
         {/* 핵심 실적 대시보드 */}
-        <div className="bg-slate-900 text-slate-200 p-6 rounded-none shadow-md border-b-4 border-blue-600 flex flex-col justify-between">
+        <div className="bg-blue-50 text-blue-900 p-6 rounded-none shadow-sm border border-blue-100 flex flex-col justify-between">
           <div className="space-y-4">
-            <span className="bg-blue-600/20 text-blue-300 text-[10px] tracking-widest font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm">
+            <span className="bg-blue-600/10 text-blue-700 text-[10px] tracking-widest font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm">
               FINANCIAL RESULTS
             </span>
             <div className="space-y-1">
-              <p className="text-slate-400 text-xs font-bold font-serif">연간 예상 총 매출</p>
-              <p className="text-2xl md:text-3xl font-black text-white tracking-tight font-mono">
-                {results.totalAnnualRevenue.toFixed(1)} <span className="text-xs font-light text-slate-400">억 원/년</span>
+              <p className="text-blue-800 text-xs font-bold font-serif">연간 예상 총 매출</p>
+              <p className="text-2xl md:text-3xl font-black text-blue-950 tracking-tight font-mono">
+                {results.totalAnnualRevenue.toFixed(1)} <span className="text-xs font-light text-blue-800">억 원/년</span>
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 border-t border-slate-800 pt-4">
+            <div className="grid grid-cols-2 gap-4 border-t border-blue-200 pt-4">
               <div className="space-y-0.5">
-                <p className="text-slate-400 text-[10px]">연간 소요 원가총액</p>
-                <p className="text-sm font-bold text-slate-200 font-mono">
+                <p className="text-blue-800 text-[10px]">연간 소요 원가총액</p>
+                <p className="text-sm font-bold text-blue-950 font-mono">
                   {results.totalAnnualCost.toFixed(1)} 억
                 </p>
               </div>
               <div className="space-y-0.5">
-                <p className="text-slate-400 text-[10px]">운항사 순수 영업이익</p>
-                <p className="text-sm font-black text-emerald-400 font-mono" id="text-profit">
+                <p className="text-blue-800 text-[10px]">운항사 순수 영업이익</p>
+                <p className="text-sm font-black text-emerald-700 font-mono" id="text-profit">
                   {results.totalAnnualProfit.toFixed(1)} 억
                 </p>
               </div>
             </div>
 
-            <div className="border-t border-slate-800 pt-3 flex justify-between items-center text-xs">
-              <span className="text-slate-450 font-serif">가중 총 평균 이익률</span>
-              <span className="font-bold text-white text-sm font-mono">
+            <div className="border-t border-blue-200 pt-3 flex justify-between items-center text-xs">
+              <span className="text-blue-800 font-serif">가중 총 평균 이익률</span>
+              <span className="font-bold text-blue-950 text-sm font-mono">
                 {results.totalOPMargin.toFixed(2)} %
               </span>
             </div>
 
-            <div className="border-t border-slate-800/60 pt-2.5 mt-2.5 text-[10px] text-slate-400 space-y-1.5 leading-relaxed font-sans">
+            <div className="border-t border-blue-200/60 pt-2.5 mt-2.5 text-[10px] text-blue-800 space-y-1.5 leading-relaxed font-sans">
               <p>
-                <span className="text-slate-300 font-bold block mb-0.5">※ 화물항공업계 주요 영업이익률 참고치:</span>
-                국내 유일 화물 전용 항공사인 <span className="text-orange-400 font-bold">에어인천(Air Incheon)</span> 및 글로벌 주요 화물 전용 항공사(Polar Air, Atlas Air 등)의 안정기 영업이익률은 운항 가동률, 백홀(Backhaul) 복귀 편의 빈 비행(Ferry Flight) 및 고가의 기재 인프라 관리비 등을 종합 감안하여 평균 <strong className="text-orange-300 font-mono">15% ~ 30%</strong> 수준을 유지하는 것이 모범적인 정석입니다.
+                <span className="text-blue-950 font-bold block mb-0.5">※ 화물항공업계 주요 영업이익률 참고치:</span>
+                국내 유일 화물 전용 항공사인 <span className="text-orange-700 font-bold">에어인천(Air Incheon)</span> 및 글로벌 주요 화물 전용 항공사(Polar Air, Atlas Air 등)의 안정기 영업이익률은 운항 가동률, 백홀(Backhaul) 복귀 편의 빈 비행(Ferry Flight) 및 고가의 기재 인프라 관리비 등을 종합 감안하여 평균 <strong className="text-orange-800 font-mono">15% ~ 30%</strong> 수준을 유지하는 것이 모범적인 정석입니다.
               </p>
               <p>
-                본 시뮬레이터에서는 이러한 실제 비행 운영 변수와 원가 마찰을 반영하여, 기본 단가에 종합 보정 계수(0.77 배율)를 적용함으로써 <span className="text-slate-200">현실적인 30% 수준의 상업 가중 마진</span>이 도출되도록 조정 설계되었습니다.
+                본 시뮬레이터에서는 이러한 실제 비행 운영 변수와 원가 마찰을 반영하여, 기본 단가에 종합 보정 계수(0.77 배율)를 적용함으로써 <span className="text-blue-950">현실적인 30% 수준의 상업 가중 마진</span>이 도출되도록 조정 설계되었습니다.
               </p>
             </div>
           </div>
