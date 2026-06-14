@@ -139,7 +139,7 @@ export default function ReportView() {
       </div>
 
       {/* 실물 편철 서식 스타일의 뷰어 */}
-      <div className="p-4 md:p-12 bg-slate-100/40 flex justify-center">
+      <div className="p-4 md:p-12 bg-white flex justify-center">
         <div className="bg-white w-full max-w-3xl shadow-md border border-slate-350 p-6 md:p-14 font-sans text-slate-900 leading-relaxed text-sm relative" id="styled-paper">
           {/* 내부 로고형 워터마크 효과 */}
           <div className="absolute top-8 right-8 text-slate-400 border border-slate-400 px-3 py-1 text-[10px] font-mono font-bold tracking-widest uppercase">
