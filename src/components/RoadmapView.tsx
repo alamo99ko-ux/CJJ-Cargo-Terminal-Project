@@ -22,6 +22,7 @@ const ROADMAP_STEPS: RoadmapStep[] = [
       "‘충북물류협회’ 및 ‘화물터미널주식회사’ 설립 추진",
       "위탁운항사 설립 및 안전운항증명(AOC;Air Operation Certificate) 준비 시작",
       "알리, 테무, 틱톡, 쉬인 앵커 화주 참여 유치",
+      "LX판토스 등 주요 운송업체 수요파악 및 MOU진행",
       "항공 지입 투자자를 유치하여 초기 기체 대여 협상금(Deposit) 에스크로 구조 설계"
     ],
     infrastructure: [
