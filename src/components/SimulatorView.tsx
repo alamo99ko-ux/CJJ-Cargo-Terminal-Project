@@ -26,7 +26,7 @@ export default function SimulatorView() {
   // 'cost15' : 사용자가 원한 "실제 운항원가 + 원가 15% 수준 영업이익 보전 모델" 구조
   const [pricingMode, setPricingMode] = useState<"value" | "cost15">("value");
 
-  // 탑제 하한율 / 적재율 (%)
+  // 탑재 하한율 / 적재율 (%)
   const [loadFactor, setLoadFactor] = useState<number>(75);
 
   // 시뮬레이션 계산 결과
@@ -42,7 +42,7 @@ export default function SimulatorView() {
     firstOfficersHire: 0,
     groundStaffHire: 0,
     totalJobs: 0,
-    taxIncome: 0, // 갑근세 + 법인세 + 지방 재산세 합산
+    taxIncome: 0, // 소득세 + 법인세 + 지방 재산세 합산
     pilotSalaryAvg: 0,
     staffSalaryAvg: 0,
     totalTaxLabor: 0,
@@ -122,8 +122,8 @@ export default function SimulatorView() {
     const profit = Math.max(0, totalRevenue - totalCost);
     const opMargin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
 
-    // 세수 추정 계산 (갑근세, 법인세, 지방세)
-    // 갑근세 계산: 조종사 평균 실효 소득세율 약 15% 적용, 일반 지상직 약 6% 적용
+    // 세수 추정 계산 (소득세, 법인세, 지방세)
+    // 소득세 계산: 조종사 평균 실효 소득세율 약 15% 적용, 일반 지상직 약 6% 적용
     // 이 수치는 약 연봉 구간대의 누진세를 개략 적용한 값입니다.
     let laborTax = 0; // 억원
     AIRCRAFT_DATA.forEach((ac) => {
@@ -133,7 +133,7 @@ export default function SimulatorView() {
       const pilotsSalaryTotal = ac.crewsPerAircraft * ac.avgYearlySalaryPilot * count; // 만원
       const groundSalaryTotal = ac.groundStaffPerAircraft * ac.avgYearlySalaryStaff * count; // 만원
 
-      // 갑근세 집계 (조종사 15% 실효, 지상직 6% 실효)
+      // 소득세집계 (조종사 15% 실효, 지상직 6% 실효)
       laborTax += (pilotsSalaryTotal * 0.15 + groundSalaryTotal * 0.06) / 10000; // 억원 단위 변환
     });
 
@@ -240,7 +240,7 @@ export default function SimulatorView() {
                   <div className="space-y-1">
                     <p className="font-bold text-slate-950 text-sm tracking-tight font-serif">{ac.name}</p>
                     <p className="text-xs text-slate-650">
-                      편당 운용용량: <span className="font-bold text-slate-900">{ac.capacityTon}톤</span> (최대 {ac.maxCapacityTon}톤) · 일일 운항편수: <span className="font-bold text-slate-900">{ac.dailyFlights}회</span>
+                      편당 운용용량: <span className="font-bold text-slate-900">{ac.capacityTon}톤</span> (최대 {ac.maxCapacityTon}톤) · 일일 운항편수: <span className="font-bold text-slate-900">{ac.dailyFlights}회</span> · 평균 운항시간: <span className="font-bold text-slate-900">{ac.id === 'atr72' ? '2시간' : ac.id === 'b737' ? '5시간' : '10시간'}</span>
                     </p>
                     <p className="text-[11px] text-slate-450 font-mono">
                       (연간 감가 및 리스료 기여: {ac.fixedLease}억원 · 직접 고용: 대당 {ac.crewsPerAircraft + ac.groundStaffPerAircraft}명 [기장 {Math.round(ac.crewsPerAircraft / 3)}명 / 부기장 {Math.round(ac.crewsPerAircraft / 3) * 2}명])
@@ -352,7 +352,7 @@ export default function SimulatorView() {
             </div>
             
             <div className="p-3 bg-slate-50 rounded-none border border-slate-200 text-xs text-slate-600 block mt-2">
-              ※ 화물 특성 믹스 성비 조절 시 총 합산 배분은 100%가 상호 자동 보정되도록 정밀 조절 설계되었습니다.
+              ※ 화물 특성 믹스 성비 조절 시 총 합산 배분은 100%가 상호 자동 보정되도록 조정 설계되었습니다.
             </div>
           </div>
         </div>
@@ -574,7 +574,7 @@ export default function SimulatorView() {
           </span>
           <div className="space-y-3 text-xs leading-relaxed">
             <div className="flex justify-between border-b border-slate-100 pb-2">
-              <span className="text-slate-500">지방 근로소득 기여 (갑근세분)</span>
+              <span className="text-slate-500">지방 근로소득 기여 (소득세분)</span>
               <span className="font-bold text-slate-900 font-mono">{(results.totalTaxLabor).toFixed(2)} 억 원/년</span>
             </div>
             <div className="flex justify-between border-b border-slate-100 pb-2">
