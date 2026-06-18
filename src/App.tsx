@@ -109,13 +109,13 @@ export default function App() {
               </button>
             </div>
             <h2 className="text-xl md:text-3xl font-black text-slate-950 font-serif leading-tight tracking-tight">
-              “활주로 연장이나 신설이 우선이 아니고,<br/>
-              <span className="underline decoration-blue-500 decoration-3">화물 전용 터미널의 실질적 가동</span>에 있습니다.”
+              “청주공항 3,200미터 신설활주로 추진과 화물전용터미널 조기 가동의 시너지로,<br/>
+              <span className="underline decoration-blue-500 decoration-3">항공 여객, 물류 경쟁력</span>”
             </h2>
             <p className="text-slate-650 text-sm leading-relaxed text-justify">
-              충청북도가 추진 중인 1.5조 원 규모의 활주로 신설 안은 장기간 소요되는 토목 사업입니다. 반면, 항공물류 전문가들의 엄밀한 분석에 따르면 
-              <strong> 화물기는 연료를 가득 탑재하지 않은 중간 급유 기착 방식이 기본 정석이므로, 현 활주로(2,743m) 조건에서도 100톤급 대형 기종(B777F)이 아무런 상업 제약 없이 상시 이착륙이 가능합니다.</strong> <br/>
-              즉각 해결해야 할 핵심 과제는 대형 예산 확보 이전에 보세창고 지정, 300억 대 물류펀드 구축 및 독자 항공사(Skyking Air)의 준공공 거버넌스 출범입니다.
+              충청북도가 추진 중인 1.5조 원 규모의 활주로 신설 안은 항공물류 거점 도약을 위한 장기 핵심 과제입니다. 이와 함께, 항공물류 전문가들의 엄밀한 분석에 따르면 
+              연장하고자 법안을 제정하고 있으며, 또한 현재 청주 2,743m로도 충분히 화물기 운항 이 가능합니다.<br/>
+              즉각적인 성과를 위해 보세창고 지정, 300억원 대 물류펀드 구축 및 독자 항공사(Skyking Air)의 준공공 거버넌스 출범으로 화물 전용 터미널을 조기 가동해야 합니다. 3,200미터 활주로 신설과 터미널 조기 가동을 상호 보완적으로 추진할 때, 화물기와 여객기의 시너지가 극대화되어 청주공항은 진정한 항공물류 허브로 거듭날 것입니다.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3">
               <div className="flex items-center gap-2.5 p-3.5 bg-blue-50/80 text-blue-950 rounded-none border border-blue-200 transition-all shadow-xs">
@@ -163,11 +163,15 @@ export default function App() {
             </div>
             <div className="space-y-2.5 text-xs text-blue-800 block">
               <div className="flex items-center justify-between border-b border-blue-200 pb-1.5">
-                <span>청주공항 현재 처리한계</span>
+                <span>2025년 청주공항 여객탑승인원</span>
+                <span className="font-bold text-blue-950 font-mono">500만명 돌파</span>
+              </div>
+              <div className="flex items-center justify-between border-b border-blue-200 pb-1.5">
+                <span>현재, 청주공항 화물 처리시설 한계</span>
                 <span className="font-bold text-blue-950 font-mono">연 3.8만 톤</span>
               </div>
               <div className="flex items-center justify-between border-b border-blue-200 pb-1.5 text-blue-700">
-                <span>향후 년간 16만톤 처리능력 목표</span>
+                <span>향후 년간 화물처리 능력 목표</span>
                 <span className="font-bold font-mono text-blue-950">연 16만 톤</span>
               </div>
               <div className="flex items-center justify-between border-b border-blue-200 pb-1.5">
@@ -199,10 +203,13 @@ export default function App() {
                 </span>
                 <span className="font-bold text-rose-600 font-mono">0% (연 0톤)</span>
               </div>
+              <div className="flex items-center border-b border-blue-200 pb-1.5">
+                <span className="text-blue-700 text-[11px]">현재 청주-제주 구간 Belly Cargo를 이용한 제한적인 화물운용중</span>
+              </div>
             </div>
             <div className="h-px bg-blue-200"></div>
-            <p className="text-[10px] text-blue-600 italic">
-              ※ 여객시설과 달리 화물시설(검색기, 콜드체인 등)은 운영 법인이 직접 구비 투자하여 즉시 개통해야 합니다.
+            <p className="text-[10px] text-fuchsia-600 italic">
+              ※ 여객시설과 달리 화물시설(검색기, 콜드체인 등)은 운영 법인이 직접 구비하여 운영해야합니다.
             </p>
           </div>
         </section>
