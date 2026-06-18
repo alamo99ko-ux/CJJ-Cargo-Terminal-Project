@@ -109,8 +109,8 @@ export default function App() {
               </button>
             </div>
             <h2 className="text-xl md:text-3xl font-black text-slate-950 font-serif leading-tight tracking-tight">
-              “청주공항 3,200미터 신설활주로 추진과 화물전용터미널 조기가동의 시너지로,<br/>
-              항공 여객, 물류 경쟁력 확보”
+              청주공항 3,200미터 신설활주로 추진과 <br/> 화물전용터미널 조기가동의 시너지로 <br/>
+              항공 여객 + 물류 경쟁력 확보
             </h2>
             <p className="text-slate-650 text-sm leading-relaxed text-justify">
               충청북도가 추진 중인 1.5조 원 규모의 활주로 신설 안은 항공물류 거점 도약을 위한 장기 핵심 과제입니다. 이와 함께, 항공물류 전문가들의 엄밀한 분석에 따르면 
