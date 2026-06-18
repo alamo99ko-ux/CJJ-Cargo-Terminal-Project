@@ -12,11 +12,21 @@ export interface AircraftConfig {
   fixedLease: number; // 연간 리스료 (억원)
   fixedLabor: number; // 연간 인건비 (억원)
   fixedAdmin: number; // 연간 일반운영비 (억원)
-  hourlyVarCost: number; // 시간당 변동비 (만원)
+  hourlyVarCost: number; // 시간당 변동비 (만원, 연료비 제외)
+  fuelConsPerHr: number; // 시간당 연료소모량 (kg/h)
+  fuelPricePerKg: number; // 연료 kg당 가격 (원)
   crewsPerAircraft: number; // 대당 조종사 수 (명)
+  captainsPerAircraft: number; // 대당 기장 수 (명)
+  firstOfficersPerAircraft: number; // 대당 부기장 수 (명)
   groundStaffPerAircraft: number; // 대당 지상 전문인력 수 (명)
   avgYearlySalaryPilot: number; // 조종사 평균 연봉 (만원)
   avgYearlySalaryStaff: number; // 지상직 평균 연봉 (만원)
+  avgPayloadTon: number; // 1편당 평균 화물 적재톤수 (톤)
+  dailyFlightHours: number; // 기종별 하루 비행시간 (시간)
+  hoursPerFlight: number; // 편당 비행시간 (시간)
+  maintenanceCostPerCheck: number; // 2000시간 주기 당 1회 중정비 비용 (억원)
+  generalMaintenanceCost: number; // 연간 대당 일반정비비 (억원)
+  routeAirportFee: number; // 연간 대당 항로 및 공항사용료 (억원)
 }
 
 export const AIRCRAFT_DATA: AircraftConfig[] = [
@@ -25,60 +35,90 @@ export const AIRCRAFT_DATA: AircraftConfig[] = [
     name: "ATR72-600F (소형 화물기)",
     capacityTon: 6,
     maxCapacityTon: 9,
-    dailyFlights: 6,
+    dailyFlights: 12,
     annualDays: 300,
     baseGeneralRate: 1400,
     baseFreshRate: 2500,
     baseDgRate: 4000,
-    annualHours: 1800,
-    fixedLease: 18,
-    fixedLabor: 11.6,
-    fixedAdmin: 2,
-    hourlyVarCost: 117,
-    crewsPerAircraft: 15,
-    groundStaffPerAircraft: 11,
+    annualHours: 7200,
+    fixedLease: 20,
+    fixedLabor: 38.4,
+    fixedAdmin: 10,
+    hourlyVarCost: 10,
+    fuelConsPerHr: 700,
+    fuelPricePerKg: 1200,
+    crewsPerAircraft: 24,
+    captainsPerAircraft: 6,
+    firstOfficersPerAircraft: 18,
+    groundStaffPerAircraft: 24,
     avgYearlySalaryPilot: 11000,
     avgYearlySalaryStaff: 5500,
+    avgPayloadTon: 6,
+    dailyFlightHours: 24,
+    hoursPerFlight: 2,
+    maintenanceCostPerCheck: 2.0,
+    generalMaintenanceCost: 0.5,
+    routeAirportFee: 0.3,
   },
   {
     id: "b737",
-    name: "B737-800BCF (중형 화물기)",
+    name: "B737-800F (중형 화물기)",
     capacityTon: 15,
     maxCapacityTon: 23,
+    dailyFlights: 4,
+    annualDays: 300,
+    baseGeneralRate: 1400,
+    baseFreshRate: 2500,
+    baseDgRate: 4000,
+    annualHours: 3600,
+    fixedLease: 45,
+    fixedLabor: 51.2,
+    fixedAdmin: 15,
+    hourlyVarCost: 15,
+    fuelConsPerHr: 2500,
+    fuelPricePerKg: 1200,
+    crewsPerAircraft: 32,
+    captainsPerAircraft: 8,
+    firstOfficersPerAircraft: 24,
+    groundStaffPerAircraft: 32,
+    avgYearlySalaryPilot: 14000,
+    avgYearlySalaryStaff: 6000,
+    avgPayloadTon: 15,
+    dailyFlightHours: 12,
+    hoursPerFlight: 3,
+    maintenanceCostPerCheck: 3.0,
+    generalMaintenanceCost: 1.0,
+    routeAirportFee: 0.6,
+  },
+  {
+    id: "b777",
+    name: "B777-200F (대형 화물기)",
+    capacityTon: 80,
+    maxCapacityTon: 100,
     dailyFlights: 2,
     annualDays: 300,
     baseGeneralRate: 1400,
     baseFreshRate: 2500,
     baseDgRate: 4000,
-    annualHours: 3000,
-    fixedLease: 36,
-    fixedLabor: 15.4,
-    fixedAdmin: 2,
-    hourlyVarCost: 153,
-    crewsPerAircraft: 18,
-    groundStaffPerAircraft: 14,
-    avgYearlySalaryPilot: 14000,
-    avgYearlySalaryStaff: 6000,
-  },
-  {
-    id: "b777",
-    name: "B777F / B777-200F (대형 화물기)",
-    capacityTon: 80,
-    maxCapacityTon: 120,
-    dailyFlights: 1,
-    annualDays: 300,
-    baseGeneralRate: 1400,
-    baseFreshRate: 2500,
-    baseDgRate: 4000,
-    annualHours: 3000,
-    fixedLease: 60,
-    fixedLabor: 19.2,
-    fixedAdmin: 2,
-    hourlyVarCost: 400,
-    crewsPerAircraft: 24,
-    groundStaffPerAircraft: 18,
+    annualHours: 4800,
+    fixedLease: 100,
+    fixedLabor: 64.0,
+    fixedAdmin: 20,
+    hourlyVarCost: 30,
+    fuelConsPerHr: 6000,
+    fuelPricePerKg: 1000,
+    crewsPerAircraft: 40,
+    captainsPerAircraft: 10,
+    firstOfficersPerAircraft: 30,
+    groundStaffPerAircraft: 40,
     avgYearlySalaryPilot: 18000,
     avgYearlySalaryStaff: 7000,
+    avgPayloadTon: 80,
+    dailyFlightHours: 16,
+    hoursPerFlight: 8,
+    maintenanceCostPerCheck: 5.0,
+    generalMaintenanceCost: 2.0,
+    routeAirportFee: 1.2,
   }
 ];
 

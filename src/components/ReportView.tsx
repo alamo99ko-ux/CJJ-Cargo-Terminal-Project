@@ -113,14 +113,7 @@ export default function ReportView() {
               </>
             )}
           </button>
-          <button
-            onClick={downloadTextFile}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-bold cursor-pointer transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-            id="btn-download-txt"
-          >
-            <Download className="h-3.5 w-3.5" />
-            <span>TXT 다운로드</span>
-          </button>
+
           <button
             onClick={() => {
               if ((window as any).runPrintMode) {
@@ -172,7 +165,7 @@ export default function ReportView() {
 
           {/* 대제목 */}
           <h1 className="text-xl md:text-2xl font-black text-slate-950 font-serif leading-snug text-center mb-8 border-b-2 border-slate-800 pb-4">
-            청주국제공항 항공물류 활성화를 위한 마스터플랜 및 사업 타당성 정책 건의서
+            청주국제공항 항공물류 활성화를 위한 마스터플랜 및 <br/> 사업 타당성 정책 건의서
           </h1>
 
           {/* 본문 단락 */}
@@ -248,8 +241,8 @@ export default function ReportView() {
             <h2 className="text-base font-bold text-slate-950 border-b border-slate-300 pb-1 pt-4 font-serif">
               Ⅲ. 시설 운영 주체의 기획/비용 부담의 근본적 차별
             </h2>
-            <p>
-              여객기는 여객터미널 시설(공항 검색 장비, 컨베이어, 체크인 카운터 존 등) 일체를 국가 즉 공항공사가 직접 구비하는 것이 절차입니다. 그러나 <strong>화물 운송은 시설 건물 자체는 기지 부지에 공사가 건축 대여하더라도, 검색 대형 X-ray 통과 장비, 조업용 무인 AGV/컨베이어 승하 수송 선로, 의약품을 위한 냉장/클린룸 존, 야간 수동 통관 검사 및 보안 시설 인프라를 '화물터미널 주식회사' 또는 '위탁 지배 운영사'가 자본을 직접 조달해 구비해야 작동합니다.</strong>
+            <p className="leading-relaxed">
+              여객기는 여객터미널 시설(공항 검색 장비, 컨베이어, 체크인 카운터 존 등) 일체를 국가 즉 공항공사가 직접 구비하는 것이 절차입니다. 그러나 <strong className="text-xl block py-3">※ 여객터미널과 달리 화물터미널은 사용자가 직접 장비(검색기, 콜드체인 등)를 직접 준비해야합니다.</strong>
             </p>
             <p>
               이 때문에 화물기 도입 의지만을 앞세우는 여타 지방 공항들은 인프라 준비 단계에서 좌절하는 사례가 빈번했습니다. 충청북도 주도의 300억 원 상당 공공-민간 혼합 항공물류 SPC 펀드를 설계하고 공동 투자하여 시설의 '시동 동력'을 확보하는 마스터 플랜을 0순위 과제로 상정하는 이유가 여기에 있습니다.

@@ -2,6 +2,19 @@ import React, { useState, useEffect } from "react";
 import { AIRCRAFT_DATA, AircraftConfig } from "../data";
 import { Calculator, Users, DollarSign, ArrowRight, ShieldAlert, Award, Printer } from "lucide-react";
 
+const fmt = (num: number, fractionDigits: number = 1): string => {
+  const str = num.toFixed(fractionDigits);
+  if (str.includes('.')) {
+    const parts = str.split('.');
+    let decimals = parts[1];
+    while (decimals.endsWith('0')) {
+      decimals = decimals.slice(0, -1);
+    }
+    return decimals.length > 0 ? `${parts[0]}.${decimals}` : parts[0];
+  }
+  return str;
+};
+
 export default function SimulatorView() {
   // 기종별 구매/리스 수량 상태
   const [fleetCounts, setFleetCounts] = useState<{ [key: string]: number }>({
@@ -27,7 +40,7 @@ export default function SimulatorView() {
   const [pricingMode, setPricingMode] = useState<"value" | "cost15">("value");
 
   // 탑재 하한율 / 적재율 (%)
-  const [loadFactor, setLoadFactor] = useState<number>(75);
+  const [loadFactor, setLoadFactor] = useState<number>(100);
 
   // 시뮬레이션 계산 결과
   const [results, setResult] = useState({
@@ -42,12 +55,13 @@ export default function SimulatorView() {
     firstOfficersHire: 0,
     groundStaffHire: 0,
     totalJobs: 0,
-    taxIncome: 0, // 소득세 + 법인세 + 지방 재산세 합산
+    taxIncome: 0,
     pilotSalaryAvg: 0,
     staffSalaryAvg: 0,
     totalTaxLabor: 0,
     totalTaxCorporate: 0,
     totalTaxLocal: 0,
+    populationInflow: 0,
   });
 
   useEffect(() => {
@@ -59,14 +73,12 @@ export default function SimulatorView() {
     let captainsCount = 0;
     let firstOfficersCount = 0;
     let groundCount = 0;
-    let totalLaborCostSum = 0;
     let localTaxSum = 0;
 
     AIRCRAFT_DATA.forEach((ac) => {
       const count = fleetCounts[ac.id] || 0;
       if (count === 0) return;
 
-      // 1. 적반 톤수 계산
       const actualCapacityPerFlight = ac.capacityTon * (loadFactor / 100);
       const dailyFlightsTon = actualCapacityPerFlight * ac.dailyFlights;
       const annualFlightsTon = dailyFlightsTon * ac.annualDays;
@@ -74,73 +86,50 @@ export default function SimulatorView() {
       dailyTonSum += dailyFlightsTon * count;
       annualTonSum += annualFlightsTon * count;
 
-      // 2. 인력 유발 (기장 1 : 부기장 2 비율 계산)
-      const captainsPerAc = Math.round(ac.crewsPerAircraft / 3);
-      const firstOfficersPerAc = captainsPerAc * 2;
-      captainsCount += captainsPerAc * count;
-      firstOfficersCount += firstOfficersPerAc * count;
+      captainsCount += ac.captainsPerAircraft * count;
+      firstOfficersCount += ac.firstOfficersPerAircraft * count;
       pilotsCount += ac.crewsPerAircraft * count;
       groundCount += ac.groundStaffPerAircraft * count;
 
-      // 지방 재산세 (지방세법상 도입가액/시가표준액의 약 0.3% + 지방교육세 20% 포함 총 0.36% 실효요율 기준)
-      // 대당 도입가격 고려: ATR72-600F (약 250억 원) -> 약 0.9억 원/년, B737-800BCF (약 600억 원) -> 약 2.2억 원/년, B777F (약 1,500억 원) -> 약 5.5억 원/년
       const localTaxPerAircraft = ac.id === "atr72" ? 0.9 : ac.id === "b737" ? 2.2 : 5.5;
-      localTaxSum += localTaxPerAircraft * count; // 억원
+      localTaxSum += localTaxPerAircraft * count;
 
-      // 3. 비용 산정 (고정비 + 변동비)
-      // 고정비 = 리스료 + 인건비 + 일반운영비 (억원)
-      const annualFixedCost = ac.fixedLease + ac.fixedLabor + ac.fixedAdmin;
-      // 변동비(연간) = 시간당 변동비 * 연간 운항시간 (만원 -> 억원 변환)
-      const annualVariableCost = (ac.hourlyVarCost * ac.annualHours) / 10000;
-      const costPerAircraft = annualFixedCost + annualVariableCost;
-      totalCost += costPerAircraft * count; // 억원 sum
+      const annualMaintenanceCost = ac.maintenanceCostPerCheck;
+      const annualFixedCost = ac.fixedLease + ac.fixedLabor + ac.fixedAdmin + annualMaintenanceCost;
+      const annualVariableCost = (ac.hourlyVarCost * ac.annualHours) / 10000 + ac.generalMaintenanceCost + ac.routeAirportFee;
+      const fuelKg = ac.fuelConsPerHr * ac.annualHours;
+      const fuelCost = (fuelKg * ac.fuelPricePerKg) / 100000000; // 연료비 오차 완화를 위한 합산 (억원/대)
+      const costPerAircraft = annualFixedCost + annualVariableCost + fuelCost;
+      totalCost += costPerAircraft * count;
 
-      // 4. 매출 산정 (화물 믹스 적용 단가 결정)
-      // 믹스 비중에 따른 가중 단가 (원/kg)
       const weightedRatePerKg =
         (ac.baseGeneralRate * cargoMix.general +
           ac.baseFreshRate * cargoMix.fresh +
-          ac.baseDgRate * cargoMix.dg) /
-        100;
+          ac.baseDgRate * cargoMix.dg) / 100;
 
-      // 연 매출 = 연간 화물 수송량(톤) * 1,000(kg) * 가중단가(원) / 100,000,000 (억원 변환)
       let revenuePerAircraft = (annualFlightsTon * 1000 * weightedRatePerKg) / 100000000;
 
       if (pricingMode === "cost15") {
-        // 실제 운항원가 + 원가 15% 수준 영업이익 보전 모델
         revenuePerAircraft = costPerAircraft * 1.15;
       } else {
-        // 실제 화물 가동률, 백홀(Backhaul) 복귀 시의 빈 비행(Ferry Flight) 및 할인 요율 등을 고려하여
-        // 30% 수준의 현실적인 종합 이익 보정 계수(약 0.77 배율)를 적용합니다.
         revenuePerAircraft = revenuePerAircraft * 0.77;
       }
 
       totalRevenue += revenuePerAircraft * count;
     });
 
-    // 최종 이익액 계산
     const profit = Math.max(0, totalRevenue - totalCost);
     const opMargin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
 
-    // 세수 추정 계산 (소득세, 법인세, 지방세)
-    // 소득세 계산: 조종사 평균 실효 소득세율 약 15% 적용, 일반 지상직 약 6% 적용
-    // 이 수치는 약 연봉 구간대의 누진세를 개략 적용한 값입니다.
-    let laborTax = 0; // 억원
+    let laborTax = 0;
     AIRCRAFT_DATA.forEach((ac) => {
       const count = fleetCounts[ac.id] || 0;
       if (count === 0) return;
-
-      const pilotsSalaryTotal = ac.crewsPerAircraft * ac.avgYearlySalaryPilot * count; // 만원
-      const groundSalaryTotal = ac.groundStaffPerAircraft * ac.avgYearlySalaryStaff * count; // 만원
-
-      // 소득세집계 (조종사 15% 실효, 지상직 6% 실효)
-      laborTax += (pilotsSalaryTotal * 0.15 + groundSalaryTotal * 0.06) / 10000; // 억원 단위 변환
+      const pilotsSalaryTotal = ac.crewsPerAircraft * ac.avgYearlySalaryPilot * count;
+      const groundSalaryTotal = ac.groundStaffPerAircraft * ac.avgYearlySalaryStaff * count;
+      laborTax += (pilotsSalaryTotal * 0.15 + groundSalaryTotal * 0.06) / 10000;
     });
-
-    // 법인세: 총 영업이익의 20% (억원)
     const corporateTax = profit * 0.2;
-
-    // 총 기여 세수 (억원)
     const totalTaxGains = laborTax + corporateTax + localTaxSum;
 
     setResult({
@@ -156,11 +145,12 @@ export default function SimulatorView() {
       groundStaffHire: groundCount,
       totalJobs: pilotsCount + groundCount,
       taxIncome: totalTaxGains,
-      pilotSalaryAvg: 14333, // 단순 가중 가이드
+      pilotSalaryAvg: 14333,
       staffSalaryAvg: 6166,
       totalTaxLabor: laborTax,
       totalTaxCorporate: corporateTax,
       totalTaxLocal: localTaxSum,
+      populationInflow: (pilotsCount + groundCount) * 4,
     });
   }, [fleetCounts, cargoMix, pricingMode, loadFactor]);
 
@@ -243,7 +233,7 @@ export default function SimulatorView() {
                       편당 운용용량: <span className="font-bold text-slate-900">{ac.capacityTon}톤</span> (최대 {ac.maxCapacityTon}톤) · 일일 운항편수: <span className="font-bold text-slate-900">{ac.dailyFlights}회</span> · 평균 운항시간: <span className="font-bold text-slate-900">{ac.id === 'atr72' ? '2시간' : ac.id === 'b737' ? '5시간' : '10시간'}</span>
                     </p>
                     <p className="text-[11px] text-slate-450 font-mono">
-                      (연간 감가 및 리스료 기여: {ac.fixedLease}억원 · 직접 고용: 대당 {ac.crewsPerAircraft + ac.groundStaffPerAircraft}명 [기장 {Math.round(ac.crewsPerAircraft / 3)}명 / 부기장 {Math.round(ac.crewsPerAircraft / 3) * 2}명])
+                      (연간 감가 및 리스료 기여: {ac.fixedLease}억원 · 조종사인원: 대당 {ac.crewsPerAircraft + ac.groundStaffPerAircraft}명 [기장 {ac.captainsPerAircraft}명 / 부기장 {ac.firstOfficersPerAircraft}명])
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -311,7 +301,7 @@ export default function SimulatorView() {
                   className="w-full accent-blue-600 h-1 bg-slate-200 rounded-none appearance-none cursor-pointer"
                   id="range-general"
                 />
-                <span className="text-[10px] text-slate-450 block font-mono">기본가: 1,400원/kg (일반 반도체 등)</span>
+                <span className="text-[10px] text-slate-450 block font-mono font-medium">기본가: 1,400원/kg (일반 반도체 등)</span>
               </div>
 
               {/* 신선/의약 */}
@@ -329,7 +319,7 @@ export default function SimulatorView() {
                   className="w-full accent-blue-600 h-1 bg-slate-200 rounded-none appearance-none cursor-pointer"
                   id="range-fresh"
                 />
-                <span className="text-[10px] text-slate-450 block font-mono">기본가: 2,500원/kg (오송 바이오의약품)</span>
+                <span className="text-[10px] text-slate-450 block font-mono font-medium">기본가: 2,500원/kg (오송 바이오의약품)</span>
               </div>
 
               {/* DG */}
@@ -347,8 +337,35 @@ export default function SimulatorView() {
                   className="w-full accent-blue-600 h-1 bg-slate-200 rounded-none appearance-none cursor-pointer"
                   id="range-dg"
                 />
-                <span className="text-[10px] text-slate-450 block font-mono">기본가: 4,000원/kg (방사성의약품 등)</span>
+                <span className="text-[10px] text-slate-450 block font-mono font-medium">기본가: 4,000원/kg (방사성의약품 등)</span>
               </div>
+            </div>
+            
+            {/* 요율 산정 점검 표기 */}
+            <div className="p-4 bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-2 mt-3 rounded-none">
+              <p className="font-bold font-serif text-sm text-emerald-900 flex items-center gap-1.5">
+                <span>💡 실시간 kg당 평균 화물 영업요율 산출 기동 점검</span>
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 font-mono pb-2 border-b border-emerald-200/80 text-emerald-850">
+                <div>• 일반화물: {cargoMix.general}% × 1,400원 = {Math.round(cargoMix.general * 14.0)}원</div>
+                <div>• 신선화물: {cargoMix.fresh}% × 2,500원 = {Math.round(cargoMix.fresh * 25.0)}원</div>
+                <div>• 정밀특수: {cargoMix.dg}% × 4,000원 = {Math.round(cargoMix.dg * 40.0)}원</div>
+              </div>
+              <div className="pt-1 flex flex-wrap justify-between items-center text-xs">
+                <span className="text-slate-700">단수 요율 가중평균치:</span>
+                <span className="font-bold underline text-slate-950 font-mono">
+                  {Math.round((1400 * cargoMix.general + 2500 * cargoMix.fresh + 4000 * cargoMix.dg) / 100).toLocaleString()}원/kg
+                </span>
+              </div>
+              <div className="flex flex-wrap justify-between items-center text-xs text-blue-900 font-bold bg-blue-50/50 p-2 border border-blue-100">
+                <span>실제 상업 마진 및 에프터 보정 (77% 배율 적용):</span>
+                <span className="font-black text-sm text-blue-800 font-mono">
+                  {Math.round(((1400 * cargoMix.general + 2500 * cargoMix.fresh + 4000 * cargoMix.dg) / 100) * 0.77).toLocaleString()}원/kg
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-500 leading-normal font-sans pt-1">
+                ※ 위 산정은 화물전용기가 회항(백홀) 시 공차 운항, 적재율 변동, 유통 마진 등을 종합 고려한 0.77 보정 배율을 자동 적용하여 안전한 요율을 적용한 계산식입니다.
+              </p>
             </div>
             
             <div className="p-3 bg-slate-50 rounded-none border border-slate-200 text-xs text-slate-600 block mt-2">
@@ -409,7 +426,7 @@ export default function SimulatorView() {
             <div className="space-y-1">
               <p className="text-blue-800 text-xs font-bold font-serif">연간 예상 총 매출</p>
               <p className="text-2xl md:text-3xl font-black text-blue-950 tracking-tight font-mono">
-                {results.totalAnnualRevenue.toFixed(1)} <span className="text-xs font-light text-blue-800">억 원/년</span>
+                {fmt(results.totalAnnualRevenue, 1)} <span className="text-xs font-light text-blue-800">억 원/년</span>
               </p>
             </div>
 
@@ -417,13 +434,13 @@ export default function SimulatorView() {
               <div className="space-y-0.5">
                 <p className="text-blue-800 text-[10px]">연간 소요 원가총액</p>
                 <p className="text-sm font-bold text-blue-950 font-mono">
-                  {results.totalAnnualCost.toFixed(1)} 억
+                  {fmt(results.totalAnnualCost, 1)} 억
                 </p>
               </div>
               <div className="space-y-0.5">
                 <p className="text-blue-800 text-[10px]">운항사 순수 영업이익</p>
                 <p className="text-sm font-black text-emerald-700 font-mono" id="text-profit">
-                  {results.totalAnnualProfit.toFixed(1)} 억
+                  {fmt(results.totalAnnualProfit, 1)} 억
                 </p>
               </div>
             </div>
@@ -431,7 +448,7 @@ export default function SimulatorView() {
             <div className="border-t border-blue-200 pt-3 flex justify-between items-center text-xs">
               <span className="text-blue-800 font-serif">가중 총 평균 이익률</span>
               <span className="font-bold text-blue-950 text-sm font-mono">
-                {results.totalOPMargin.toFixed(2)} %
+                {fmt(results.totalOPMargin, 2)} %
               </span>
             </div>
 
@@ -455,15 +472,15 @@ export default function SimulatorView() {
           <div className="space-y-3">
             <div className="flex justify-between items-end border-b border-slate-100 pb-2">
               <div className="space-y-0.5">
-                <p className="text-slate-500 text-[10px]">일평균 소화 화물 톤수</p>
+                <p className="text-slate-500 text-[10px]">평균 화물탑재율</p>
                 <p className="font-black text-slate-950 text-lg font-mono">
-                  {results.totalDailyTon.toFixed(1)} 톤/일
+                  {fmt(results.totalDailyTon, 1)} 톤/일
                 </p>
               </div>
               <div className="text-right">
                 <span className="text-[10px] text-slate-400 block">한계여력대비</span>
                 <span className={`text-xs font-bold ${results.totalDailyTon > 126 ? "text-rose-600" : "text-slate-700"}`}>
-                  {((results.totalDailyTon / 104) * 100).toFixed(1)}% 가동
+                  {fmt((results.totalDailyTon / 104) * 100, 1)}% 가동
                 </span>
               </div>
             </div>
@@ -483,7 +500,7 @@ export default function SimulatorView() {
           </div>
         </div>
 
-        {/* 직접 간접 일자리 */}
+
         <div className="bg-white p-6 rounded-none shadow-sm border border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
             <span className="bg-slate-100 text-slate-800 text-[10px] tracking-widest font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm">
@@ -519,7 +536,7 @@ export default function SimulatorView() {
                 <span className="font-black text-slate-950 text-base font-mono">{results.groundStaffHire} 명</span>
               </div>
               <div className="bg-slate-50 p-3 rounded-none border border-slate-100 text-center">
-                <span className="text-slate-500 text-[10px] block font-serif">총 직접 고용 인원</span>
+                <span className="text-slate-500 text-[10px] block font-serif">총 예상직원</span>
                 <span className="font-black text-slate-950 text-base font-mono">{results.totalJobs} 명</span>
               </div>
               <div className="bg-rose-50/50 p-3 rounded-none border border-rose-100 text-center col-span-2">
@@ -541,7 +558,7 @@ export default function SimulatorView() {
               <span className="font-black text-slate-950 text-sm font-mono">{results.groundStaffHire} 명</span>
             </div>
             <div className="flex justify-between items-center text-xs pt-1.5 border-t border-slate-200">
-              <span className="text-slate-600 font-bold">총 직접 고용 인원</span>
+              <span className="text-slate-600 font-bold">총 예상직원</span>
               <span className="font-black text-slate-950 text-sm font-mono">{results.totalJobs} 명</span>
             </div>
             <div className="flex justify-between items-center text-xs">
@@ -575,19 +592,19 @@ export default function SimulatorView() {
           <div className="space-y-3 text-xs leading-relaxed">
             <div className="flex justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500">지방 근로소득 기여 (소득세분)</span>
-              <span className="font-bold text-slate-900 font-mono">{(results.totalTaxLabor).toFixed(2)} 억 원/년</span>
+              <span className="font-bold text-slate-900 font-mono">{fmt(results.totalTaxLabor, 2)} 억 원/년</span>
             </div>
             <div className="flex justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500">충북도 환산 법인세 수입 (20% 요율)</span>
-              <span className="font-bold text-slate-900 font-mono">{(results.totalTaxCorporate).toFixed(2)} 억 원/년</span>
+              <span className="font-bold text-slate-900 font-mono">{fmt(results.totalTaxCorporate, 2)} 억 원/년</span>
             </div>
             <div className="flex justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500">등록 항공기 정치장 재산세 기여</span>
-              <span className="font-bold text-slate-900 font-mono">{(results.totalTaxLocal).toFixed(2)} 억 원/년</span>
+              <span className="font-bold text-slate-900 font-mono">{fmt(results.totalTaxLocal, 2)} 억 원/년</span>
             </div>
             <div className="flex justify-between pt-1 text-slate-950 font-bold border-t border-slate-200">
               <span className="font-serif">합산 연간 세수 기여액</span>
-              <span className="text-emerald-700 font-black text-sm font-mono">+ {results.taxIncome.toFixed(2)} 억 원/년</span>
+              <span className="text-emerald-700 font-black text-sm font-mono">+ {fmt(results.taxIncome, 2)} 억 원/년</span>
             </div>
             
             <div className="mt-3.5 pt-3 border-t border-slate-100 text-[10px] text-slate-500 space-y-1 bg-slate-50/50 p-2.5">

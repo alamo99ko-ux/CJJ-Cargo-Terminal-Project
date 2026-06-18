@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Plane, BarChart3, Milestone, HelpCircle, FileText, Anchor, Sliders, RefreshCw, Layers, Sparkles, Printer } from "lucide-react";
+import { Plane, BarChart3, Milestone, HelpCircle, FileText, Anchor, Sliders, RefreshCw, Layers, Sparkles, Printer, DollarSign } from "lucide-react";
 import ReportView from "./components/ReportView";
 import SimulatorView from "./components/SimulatorView";
 import RoadmapView from "./components/RoadmapView";
 import FaqView from "./components/FaqView";
+import FinancialView from "./components/FinancialView";
 import { PROPOSAL_TEXT } from "./data";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<"report" | "simulator" | "roadmap" | "faq">("report");
+  const [activeTab, setActiveTab] = useState<"report" | "simulator" | "roadmap" | "financial" | "faq">("report");
 
   // 전역 인쇄 복제 모드 제어 함수 등록
   React.useEffect(() => {
@@ -66,7 +67,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* 컨설턴트 및 조종사 정보 & 처음 보이는 화면 PDF 출력 버튼 */}
+          {/* 컨설턴트 및 조종사 정보 */}
           <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
             <div className="text-left md:text-right border-l-2 md:border-l-0 md:border-r-2 border-slate-300 pl-3 md:pl-0 md:pr-4 py-0.5 max-w-sm">
               <p className="text-xs font-bold text-blue-950 leading-tight font-serif italic">Prepared by Seunghee Ko</p>
@@ -74,14 +75,6 @@ export default function App() {
                 고승희 기장 · 30년 운항 경력 조종사
               </p>
             </div>
-            <button
-              onClick={handlePrintSummary}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-sm text-xs font-bold cursor-pointer transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-sm border border-blue-500 no-print"
-              id="btn-print-first"
-            >
-              <Printer className="h-3.5 w-3.5" />
-              <span>PDF 출력</span>
-            </button>
           </div>
         </div>
       </header>
@@ -105,7 +98,7 @@ export default function App() {
                 id="btn-print-summary"
               >
                 <Printer className="h-3.5 w-3.5 text-slate-650" />
-                <span>요약본/첫페이지 PDF 출력</span>
+                <span>PDF 출력</span>
               </button>
             </div>
             <h2 className="text-xl md:text-3xl font-black text-slate-950 font-serif leading-tight tracking-tight">
@@ -208,8 +201,8 @@ export default function App() {
               </div>
             </div>
             <div className="h-px bg-blue-200"></div>
-            <p className="text-[10px] text-fuchsia-600 italic">
-              ※ 여객시설과 달리 화물시설(검색기, 콜드체인 등)은 운영 법인이 직접 구비하여 운영해야합니다.
+            <p className="text-sm font-bold text-fuchsia-600">
+              ※ 여객터미널과 달리 화물터미널은 사용자가 직접 검색장비, 콜드체인 등을 직접 준비해야합니다.
             </p>
           </div>
         </section>
@@ -265,6 +258,18 @@ export default function App() {
               <HelpCircle className="h-4 w-4" />
               <span>4. 핵심 정책 11문 11답</span>
             </button>
+            <button
+              onClick={() => setActiveTab("financial")}
+              className={`animate-pulse-subtle flex items-center gap-2 px-5 py-3 text-xs md:text-sm font-black cursor-pointer transition-all uppercase tracking-tight border-b-4 -mb-[10px] ${
+                activeTab === "financial"
+                  ? "border-blue-600 text-blue-900 bg-white shadow-sm font-black"
+                  : "border-transparent text-slate-600 hover:text-blue-900 bg-sky-100 hover:bg-sky-200"
+              }`}
+              id="tab-financial"
+            >
+              <DollarSign className="h-4 w-4" />
+              <span>5. 재무 성과 및 상세 분석</span>
+            </button>
           </div>
 
           {/* 동적 컴포넌트 렌더 전용 영역 */}
@@ -272,6 +277,7 @@ export default function App() {
             {activeTab === "report" && <ReportView />}
             {activeTab === "simulator" && <SimulatorView />}
             {activeTab === "roadmap" && <RoadmapView />}
+            {activeTab === "financial" && <FinancialView />}
             {activeTab === "faq" && <FAQViewWrapper />}
           </div>
         </section>
