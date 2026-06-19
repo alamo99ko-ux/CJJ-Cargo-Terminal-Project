@@ -38,9 +38,9 @@ export default function FinancialView() {
     // 기장 출신의 실질 상업 운항 기획 보정 계수 분리 적용
     // - 모든 기종 영업이익률 및 마진 타겟을 전격 반영하여 정액 조율
     // - ATR72: 0.54 (보정율 0.54 적용) -> 영업이익률 약 37%선 (실제 약 37.9%)
-    // - B737: 0.95 (보정율 0.95 적용) -> 영업이익률 약 25%선 (실제 약 25.2%)
-    // - B777: 1.24 (보정율 1.24 및 장거리 1.25x 적용) -> 영업이익률 약 31%선 (실제 약 31.1%)
-    const discountCorrection = ac.id === "atr72" ? 0.54 : ac.id === "b737" ? 0.95 : 1.24;
+    // - B737: 0.89 (보정율 0.89 적용) -> 영업이익률 약 10%선 (실제 목표치 반영)
+    // - B777: 0.70 (보정율 0.70 적용) -> 영업이익률 약 10%선 (실제 목표치 반영)
+    const discountCorrection = ac.id === "atr72" ? 0.54 : ac.id === "b737" ? 0.89 : 0.70;
 
     // 3. 총 매출액 먼저 산산 (억원)
     const revenue = (annualTotalKg * weightedRatePerKg * discountCorrection) / 100000000;
@@ -60,8 +60,9 @@ export default function FinancialView() {
     const maintenance = count > 0 ? ac.maintenanceCostPerCheck : 0;
     const fixedCost = labor + lease + admin + maintenance;
 
-    const varCost = (ac.hourlyVarCost * ac.annualHours) / 10000 * count;
-    const fuelKg = ac.fuelConsPerHr * ac.annualHours * count;
+    const varHours = ac.id === 'atr72' ? 7200 : 4800;
+    const varCost = (ac.hourlyVarCost * varHours) / 10000;
+    const fuelKg = ac.fuelConsPerHr * varHours;
     const fuelCost = (fuelKg * ac.fuelPricePerKg) / 100000000;
     const genMainte = ac.generalMaintenanceCost * count;
     const airportFee = ac.routeAirportFee * count;
@@ -300,12 +301,12 @@ export default function FinancialView() {
               <td className="p-2 border font-mono text-slate-500">-</td>
             </tr>
             <tr className="border-b text-xs">
-              <td className="p-2 border text-left pl-12 text-slate-500">└ 하루 비행시간(시간)</td>
+              <td className="p-2 border text-left pl-12 text-slate-500">└ 하루 비행시간 (2대)</td>
               {financialData.map(d => <td key={d.id} className="p-2 border font-mono text-slate-400">{fmt(d.dailyFlightHours, 0)} 시간</td>)}
               <td className="p-2 border font-mono text-slate-500">-</td>
             </tr>
             <tr className="border-b text-xs">
-              <td className="p-2 border text-left pl-12 text-slate-500">└ 대당 연간 비행시간(시간)</td>
+              <td className="p-2 border text-left pl-12 text-slate-500">└ 연간 비행시간 (2대)</td>
               {financialData.map(d => <td key={d.id} className="p-2 border font-mono text-slate-400">{fmt(d.annualFlightHours, 0)} 시간</td>)}
               <td className="p-2 border font-mono text-slate-500">-</td>
             </tr>
@@ -315,17 +316,31 @@ export default function FinancialView() {
               <td className="p-2 border font-mono text-slate-500">-</td>
             </tr>
             <tr className="border-b text-xs bg-blue-50/30">
-              <td className="p-2 border text-left pl-12 text-blue-900 font-semibold">└ 연간 총 연료비(억원)</td>
+              <td className="p-2 border text-left pl-12 text-blue-900 font-semibold">└ 연간 총 연료비(만원/시간) (2대)</td>
               {financialData.map(d => (
                 <td key={d.id} className="p-2 border font-mono text-blue-900 font-bold">
                   {fmt(d.fuelCost, 1)} 억원
                   <div className="text-[10px] text-slate-400 font-normal leading-tight">
-                    ({fmt(d.fleetFlightHours, 0)}h × {fmt(d.fuelCostPerHour, 0)}만원)
+                    ({fmt(d.annualFlightHours, 0)}시간 × {fmt(d.fuelCostPerHour, 0)}만원)
                   </div>
                 </td>
               ))}
               <td className="p-2 border font-mono text-blue-950 font-bold">
                 {fmt(totals.fuelCost, 1)} 억원
+              </td>
+            </tr>
+            <tr className="border-b text-xs">
+              <td className="p-2 border text-left pl-12 text-slate-500">└ 화물 kg당 연료비(원)</td>
+              {financialData.map(d => (
+                <td key={d.id} className="p-2 border font-mono text-slate-500">
+                  {Math.round((d.fuelCost * 100000000) / d.annualTotalKg).toLocaleString()} 원
+                  <div className="text-[10px] text-slate-400 font-normal leading-tight">
+                    ({fmt(d.fuelCost, 2)}억원 / {Math.round(d.annualTotalKg).toLocaleString()}kg)
+                  </div>
+                </td>
+              ))}
+              <td className="p-2 border font-mono text-slate-500">
+                {Math.round((totals.fuelCost * 100000000) / totals.totalAnnualKg).toLocaleString()} 원
               </td>
             </tr>
             <tr className="border-b text-xs bg-slate-100 font-bold">
@@ -338,7 +353,7 @@ export default function FinancialView() {
                 <td key={d.id} className="p-2 border font-mono text-slate-500">
                   {fmt(d.varCost, 1)} 억원
                   <div className="text-[10px] text-slate-400 font-normal leading-tight">
-                    ({fmt(d.fleetFlightHours, 0)}h × {fmt(d.hourlyVarCost, 0)}만원)
+                    ({fmt(d.id === 'atr72' ? 7200 : 4800, 0)}시간 × {fmt(d.hourlyVarCost, 0)}만원)
                   </div>
                 </td>
               ))}
@@ -426,21 +441,21 @@ export default function FinancialView() {
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] leading-relaxed">
           <div className="space-y-1">
-            <p className="font-bold text-blue-900">1) ATR72-600F 단거리 요율 최적화 (1,075원/kg)</p>
+            <p className="font-bold text-blue-900">1) ATR72-600F 단거리 요율 최적화 ({financialData[0].avgRevenuePerKg.toLocaleString()}원/kg)</p>
             <p className="text-slate-700">
-              중국 이우, 산둥반도, 일본 오사카 등 초단거리 셔틀 노선 위주 자율 고빈도 가동을 지향합니다. 단거리 공차 복귀 리스크 및 잦은 이착륙 비용을 정밀 반영하기 위해 <strong>보정보수 배율 (0.54)</strong>을 적용하여 최종 약 37%대의 균형적인 마진 비율로 타당성을 수립하였습니다.
+              중국 이우, 산둥반도, 일본 오사카 등 초단거리 셔틀 노선 위주 자율 고빈도 가동을 지향합니다. 단거리 공차 복귀 리스크 및 잦은 이착륙 비용을 정밀 반영하기 위해 <strong>보정보수 배율 (0.54)</strong>을 적용하여 최종 약 {fmt((financialData[0].profit / financialData[0].revenue) * 100, 0)}%대의 균형적인 마진 비율로 타당성을 수립하였습니다.
             </p>
           </div>
           <div className="space-y-1 border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-4">
-            <p className="font-bold text-blue-900">2) B737-800F 신선 바이오 요율 가치 보호 (1,890원/kg)</p>
+            <p className="font-bold text-blue-900">2) B737-800F 고부가가치 및 경쟁력 강화형 요율 적용 (~{financialData[1].avgRevenuePerKg.toLocaleString()}원/kg)</p>
             <p className="text-slate-700">
-              편당 비행시간 4시간에 최적화한 중형 노선(한중일 거점)으로, 오송생명과학단지의 신선 바이오 제약, 콜드체인 우선 탑재 바인딩 계약 및 특약 할증률이 적용됩니다. 수송 가용 범위의 우수한 고정 수요 확보를 통한 <strong>보정계수 0.95</strong> 적용으로 영업이익률 약 25% 전후를 실증해 냅니다.
+              중형 화물기 운용의 경제성을 최적화하기 위해, 주요 한중일 거점 노선에서의 시장 평균 요율을 전략적으로 반영하였습니다. 운항 효율 제고 및 수익 기반의 다변화를 통해 안정적인 {fmt((financialData[1].profit / financialData[1].revenue) * 100, 0)}%대 영업이익률을 확보하고, 화물 물동량 변화에 유연하게 대응 가능한 지속가능형 운영 모델을 구현합니다.
             </p>
           </div>
           <div className="space-y-1 border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-4">
-            <p className="font-bold text-blue-900">3) B777-200F 대량 수송 및 장거리 운임 프리미엄 (3,084원/kg)</p>
+            <p className="font-bold text-blue-900">3) B777-200F 대량 수송 및 경쟁력 강화형 요율 적용 (~{financialData[2].avgRevenuePerKg.toLocaleString()}원/kg)</p>
             <p className="text-slate-700">
-              미주 및 유럽 장거리 노선의 주력이며 대당 하루 운항편수를 2편(기단 전체 4편, 비행시간 16시간)으로 정교하게 세팅하여 안정적인 지상 조업 복귀 마진을 확보하였습니다. 장거리 노선의 <strong>운임 프리미엄 1.25배</strong>를 기초로 하되, 왕복 복귀 공차 위험과 2배 증대된 비행 가동률을 안전하게 상쇄하는 <strong>보정 대입계수 1.24</strong>를 조준하여 영업이익률 약 31%선 마진 균형을 명쾌하게 증명해 냈습니다.
+              장거리 미주/유럽 노선의 규모의 경제를 활용하여 운당 단가를 최적화하였습니다. 대량 수송 능력을 바탕으로 한 효율적인 공급망 관리와 전략적 요율 선정을 통해, 시장 경쟁력을 유지하면서도 {fmt((financialData[2].profit * 100 / financialData[2].revenue), 0)}% 수준의 지속가능한 영업이익률을 달성하는 운영 체계를 확립합니다.
             </p>
           </div>
         </div>
@@ -453,40 +468,40 @@ export default function FinancialView() {
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-none relative">
-            <span className="absolute top-3 right-3 text-[10px] font-bold bg-fuchsia-100 text-fuchsia-800 px-1.5 py-0.5 font-mono">목표 Margin ~37%</span>
+            <span className="absolute top-3 right-3 text-[10px] font-bold bg-fuchsia-100 text-fuchsia-800 px-1.5 py-0.5 font-mono">목표 Margin ~{fmt((financialData[0].profit / financialData[0].revenue) * 100, 0)}%</span>
             <h5 className="font-bold text-[12px] text-blue-950 mb-2 border-b border-slate-200 pb-1 font-serif">1. ATR72-600F (소형 터보프롭)</h5>
             <div className="text-[11px] text-slate-600 leading-relaxed space-y-1.5">
               <p>
                 <strong>• 가동 유연성 극대화 및 고정비 헤지</strong>: 제트 연료 소모량이 대형기의 1/5선으로 급격한 국제 유가 충격을 원천 차단하며 무경쟁 고빈도 단거리 셔틀 체계를 확립합니다.
               </p>
               <p>
-                <strong>• 안정적 37% 수렴</strong>: 단거리 특송 및 긴급 물량을 기반으로 37%의 탄탄한 마진을 수립하여 초기 영업 가동에서 고효율 상업 생존성을 입증합니다.
+                <strong>• 안정적 {fmt((financialData[0].profit / financialData[0].revenue) * 100, 0)}% 수준 수렴</strong>: 단거리 특송 및 긴급 물량을 기반으로 {fmt((financialData[0].profit / financialData[0].revenue) * 100, 0)}% 수준의 탄탄한 마진을 수립하여 초기 영업 가동에서 고효율 상업 생존성을 입증합니다.
               </p>
             </div>
           </div>
           
           <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-none relative">
-            <span className="absolute top-3 right-3 text-[10px] font-bold bg-blue-100 text-blue-800 px-1.5 py-0.5 font-mono">목표 Margin ~25%</span>
+            <span className="absolute top-3 right-3 text-[10px] font-bold bg-blue-100 text-blue-800 px-1.5 py-0.5 font-mono">목표 Margin ~{fmt((financialData[1].profit / financialData[1].revenue) * 100, 0)}%</span>
             <h5 className="font-bold text-[12px] text-blue-950 mb-2 border-b border-slate-200 pb-1 font-serif">2. B737-800BCF (중형 제트)</h5>
             <div className="text-[11px] text-slate-600 leading-relaxed space-y-1.5">
               <p>
-                <strong>• 바이오·콜드체인 독점 수송</strong>: 충북 산단의 콜드체인 백신 및 스마트 이커머스 등 고단가 우선 배당을 기틀로 삼아 비행 안정 마진을 완벽하게 다집니다.
+                <strong>• 시장 맞춤형 요율 전략</strong>: 시장 수요와 운항 비용을 정밀 분석하여 kg당 약 {financialData[1].avgRevenuePerKg.toLocaleString()}원 수준의 최적 요율을 설정, 안정적인 {fmt((financialData[1].profit / financialData[1].revenue) * 100, 0)}%대 마진을 확보합니다.
               </p>
               <p>
-                <strong>• 고효율 25% 완수</strong>: 거점 물류 계약과 적재 지표의 상향 유지를 바탕으로 영생 이익 마진 25%선을 명확히 사수하도록 노선을 큐레이팅합니다.
+                <strong>• 운항 및 적재 효율 강화</strong>: 거점 노선의 운영 효율을 극대화하고 적재율을 최상으로 유지하여 노선 수익성을 공고히 합니다.
               </p>
             </div>
           </div>
 
           <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-none relative">
-            <span className="absolute top-3 right-3 text-[10px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 font-mono">목표 Margin ~32%</span>
+            <span className="absolute top-3 right-3 text-[10px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 font-mono">목표 Margin ~{fmt((financialData[2].profit * 100 / financialData[2].revenue), 0)}%</span>
             <h5 className="font-bold text-[12px] text-blue-950 mb-2 border-b border-slate-200 pb-1 font-serif">3. B777-200F (대형 광동체)</h5>
             <div className="text-[11px] text-slate-600 leading-relaxed space-y-1.5">
               <p>
-                <strong>• 일일 편수 현실화 및 고정 공간 판매(BSA)</strong>: 1대당 하루 1편 운용으로 비행 무리를 차단하고, 글로벌 BSA 사전 바인딩으로 여유 있게 리스크를 분산합니다.
+                <strong>• 전략적 장거리 요율 최적화</strong>: 규모의 경제를 통한 고정비 절감과 장거리 특화 물동량 유치를 통해 kg당 약 {financialData[2].avgRevenuePerKg.toLocaleString()}원대 초반의 효율적 요율 체계를 정립합니다.
               </p>
               <p>
-                <strong>• 경제적 32% Anck-down</strong>: 장거리 스케일 운임료의 규모 혜택을 온전히 수혜하여, 톤당 단위 연료 분할비를 절감하고 기종별 간극이 최소화된 이익 체킹(32% 마진)을 완수합니다.
+                <strong>• 대형기 운영 수익 최적화</strong>: 적재율 향상과 운항 비용 절감을 통해, 장거리 노선에서의 안정적인 {fmt((financialData[2].profit * 100 / financialData[2].revenue), 0)}%대 영업이익을 완성합니다.
               </p>
             </div>
           </div>

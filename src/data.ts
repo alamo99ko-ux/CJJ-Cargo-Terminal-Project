@@ -57,7 +57,7 @@ export const AIRCRAFT_DATA: AircraftConfig[] = [
     dailyFlightHours: 24,
     hoursPerFlight: 2,
     maintenanceCostPerCheck: 2.0,
-    generalMaintenanceCost: 2.0,
+    generalMaintenanceCost: 1.0,
     routeAirportFee: 1.0,
   },
   {
@@ -67,7 +67,7 @@ export const AIRCRAFT_DATA: AircraftConfig[] = [
     maxCapacityTon: 23,
     dailyFlights: 2,
     annualDays: 300,
-    baseGeneralRate: 1400,
+    baseGeneralRate: 2200,
     baseFreshRate: 2500,
     baseDgRate: 4000,
     annualHours: 4800,
@@ -87,7 +87,7 @@ export const AIRCRAFT_DATA: AircraftConfig[] = [
     dailyFlightHours: 16,
     hoursPerFlight: 4,
     maintenanceCostPerCheck: 4.0,
-    generalMaintenanceCost: 4.0,
+    generalMaintenanceCost: 2.0,
     routeAirportFee: 2.0,
   },
   {
@@ -97,7 +97,7 @@ export const AIRCRAFT_DATA: AircraftConfig[] = [
     maxCapacityTon: 100,
     dailyFlights: 1,
     annualDays: 300,
-    baseGeneralRate: 1400,
+    baseGeneralRate: 2500,
     baseFreshRate: 2500,
     baseDgRate: 4000,
     annualHours: 4800,
@@ -117,8 +117,8 @@ export const AIRCRAFT_DATA: AircraftConfig[] = [
     dailyFlightHours: 16,
     hoursPerFlight: 8,
     maintenanceCostPerCheck: 8.0,
-    generalMaintenanceCost: 2.0,
-    routeAirportFee: 1.2,
+    generalMaintenanceCost: 4.0,
+    routeAirportFee: 4.0,
   }
 ];
 
