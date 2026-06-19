@@ -143,7 +143,7 @@ export default function FinancialView() {
   return (
     <div className="p-6 bg-white border border-slate-200">
       <div className="flex justify-between items-center mb-6 border-b pb-2">
-        <h2 className="text-xl font-bold font-serif text-slate-900">재무 성과 상세 분석</h2>
+        <h2 className="text-xl font-bold font-serif text-slate-900">화물기 수익구조 개요</h2>
         <button
           onClick={() => window.print()}
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded transition duration-150"

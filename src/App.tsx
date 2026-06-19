@@ -202,7 +202,7 @@ export default function App() {
             </div>
             <div className="h-px bg-blue-200"></div>
             <p className="text-sm font-bold text-fuchsia-600">
-              ※ 여객터미널과 달리 화물터미널은 사용자가 직접 검색장비, 콜드체인 등을 직접 준비해야합니다.
+              ※ 여객터미널과 다르게 화물터미널은 운영자(사용자)가 검색장비, 콜드체인 등을 직접 준비해야합니다.
             </p>
           </div>
         </section>
@@ -268,7 +268,7 @@ export default function App() {
               id="tab-financial"
             >
               <DollarSign className="h-4 w-4" />
-              <span>5. 재무 성과 및 상세 분석</span>
+              <span>5. 화물기 수익구조 개요</span>
             </button>
           </div>
 
