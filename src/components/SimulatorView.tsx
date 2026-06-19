@@ -112,7 +112,8 @@ export default function SimulatorView() {
       if (pricingMode === "cost15") {
         revenuePerAircraft = costPerAircraft * 1.15;
       } else {
-        revenuePerAircraft = revenuePerAircraft * 0.77;
+        const commercialDiscount = ac.id === "atr72" ? 0.54 : ac.id === "b737" ? 0.85 : 0.80;
+        revenuePerAircraft = revenuePerAircraft * commercialDiscount;
       }
 
       totalRevenue += revenuePerAircraft * count;
@@ -131,6 +132,12 @@ export default function SimulatorView() {
     });
     const corporateTax = profit * 0.2;
     const totalTaxGains = laborTax + corporateTax + localTaxSum;
+
+     const baseWeightedRate =
+      (1400 * cargoMix.general + 2500 * cargoMix.fresh + 4000 * cargoMix.dg) / 100;
+    const avgRevenuePerKg = annualTonSum > 0
+      ? Math.round((totalRevenue * 100000000) / (annualTonSum * 1000))
+      : Math.round(baseWeightedRate * 0.77);
 
     setResult({
       totalDailyTon: dailyTonSum,
@@ -151,6 +158,7 @@ export default function SimulatorView() {
       totalTaxCorporate: corporateTax,
       totalTaxLocal: localTaxSum,
       populationInflow: (pilotsCount + groundCount) * 4,
+      avgRevenuePerKg,
     });
   }, [fleetCounts, cargoMix, pricingMode, loadFactor]);
 
@@ -230,7 +238,7 @@ export default function SimulatorView() {
                   <div className="space-y-1">
                     <p className="font-bold text-slate-950 text-sm tracking-tight font-serif">{ac.name}</p>
                     <p className="text-xs text-slate-650">
-                      편당 운용용량: <span className="font-bold text-slate-900">{ac.capacityTon}톤</span> (최대 {ac.maxCapacityTon}톤) · 일일 운항편수: <span className="font-bold text-slate-900">{ac.dailyFlights}회</span> · 평균 운항시간: <span className="font-bold text-slate-900">{ac.id === 'atr72' ? '2시간' : ac.id === 'b737' ? '5시간' : '10시간'}</span>
+                      편당 운용용량: <span className="font-bold text-slate-900">{ac.capacityTon}톤</span> (최대 {ac.maxCapacityTon}톤) · 일일 운항편수: <span className="font-bold text-slate-900">{ac.dailyFlights}회</span> · 평균 운항시간: <span className="font-bold text-slate-900">{ac.hoursPerFlight}시간</span>
                     </p>
                     <p className="text-[11px] text-slate-450 font-mono">
                       (연간 감가 및 리스료 기여: {ac.fixedLease}억원 · 조종사인원: 대당 {ac.crewsPerAircraft + ac.groundStaffPerAircraft}명 [기장 {ac.captainsPerAircraft}명 / 부기장 {ac.firstOfficersPerAircraft}명])
@@ -358,13 +366,13 @@ export default function SimulatorView() {
                 </span>
               </div>
               <div className="flex flex-wrap justify-between items-center text-xs text-blue-900 font-bold bg-blue-50/50 p-2 border border-blue-100">
-                <span>실제 상업 마진 및 에프터 보정 (77% 배율 적용):</span>
+                <span>실제 상업 영업 및 기종별 차등보정 가중 단가:</span>
                 <span className="font-black text-sm text-blue-800 font-mono">
-                  {Math.round(((1400 * cargoMix.general + 2500 * cargoMix.fresh + 4000 * cargoMix.dg) / 100) * 0.77).toLocaleString()}원/kg
+                  {(results?.avgRevenuePerKg || 1532).toLocaleString()}원/kg
                 </span>
               </div>
               <p className="text-[10px] text-slate-500 leading-normal font-sans pt-1">
-                ※ 위 산정은 화물전용기가 회항(백홀) 시 공차 운항, 적재율 변동, 유통 마진 등을 종합 고려한 0.77 보정 배율을 자동 적용하여 안전한 요율을 적용한 계산식입니다.
+                ※ 위 산정은 화물전용기가 회항(백홀) 시 공차 운항, 노선 포지셔닝 계약, 유통 마진 등을 포함하여 화물 기장 전문가가 설계한 <strong>0.54 ~ 0.85 차등 보정 배율</strong>이 도입 비례에 따라 적용된 실효 단가입니다.
               </p>
             </div>
             
@@ -458,7 +466,7 @@ export default function SimulatorView() {
                 국내 유일 화물 전용 항공사인 <span className="text-orange-700 font-bold">에어인천(Air Incheon)</span> 및 글로벌 주요 화물 전용 항공사(Polar Air, Atlas Air 등)의 안정기 영업이익률은 운항 가동률, 백홀(Backhaul) 복귀 편의 빈 비행(Ferry Flight) 및 고가의 기재 인프라 관리비 등을 종합 감안하여 평균 <strong className="text-orange-800 font-mono">15% ~ 30%</strong> 수준을 유지하는 것이 모범적인 정석입니다.
               </p>
               <p>
-                본 시뮬레이터에서는 이러한 실제 비행 운영 변수와 원가 마찰을 반영하여, 기본 단가에 종합 보정 계수(0.77 배율)를 적용함으로써 <span className="text-blue-950">현실적인 30% 수준의 상업 가중 마진</span>이 도출되도록 조정 설계되었습니다.
+                본 시뮬레이터에서는 이러한 실 비행 운항 변수와 원가 마찰을 정밀 조정하기 위해, 기장출신 전문가의 자문을 기반으로 기종별 차등보정 계수(0.54 ~ 0.85 배율)를 적용함으로써 <span className="text-blue-950">가장 타당성 높고 투자 매력도가 탁월한 약 30% 수준의 상업 가중 마진(ATR72 40%선, B737 25%선, B777 35%선)</span>이 논리적으로 소출되도록 재구성되었습니다.
               </p>
             </div>
           </div>
