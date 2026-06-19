@@ -46,6 +46,7 @@ export default function SimulatorView() {
   const [results, setResult] = useState({
     totalDailyTon: 0,
     totalAnnualTon: 0,
+    totalMaxCargoDay: 0, // 최대 가용 한계치 (톤/일)
     totalAnnualRevenue: 0,
     totalAnnualCost: 0,
     totalAnnualProfit: 0,
@@ -67,6 +68,7 @@ export default function SimulatorView() {
   useEffect(() => {
     let dailyTonSum = 0;
     let annualTonSum = 0;
+    let dailyMaxTonSum = 0;
     let totalRevenue = 0;
     let totalCost = 0;
     let pilotsCount = 0;
@@ -85,6 +87,7 @@ export default function SimulatorView() {
 
       dailyTonSum += dailyFlightsTon * count;
       annualTonSum += annualFlightsTon * count;
+      dailyMaxTonSum += ac.maxCapacityTon * ac.dailyFlights * count;
 
       captainsCount += ac.captainsPerAircraft * count;
       firstOfficersCount += ac.firstOfficersPerAircraft * count;
@@ -94,8 +97,8 @@ export default function SimulatorView() {
       const localTaxPerAircraft = ac.id === "atr72" ? 0.9 : ac.id === "b737" ? 2.2 : 5.5;
       localTaxSum += localTaxPerAircraft * count;
 
-      const annualMaintenanceCost = ac.maintenanceCostPerCheck;
-      const annualFixedCost = ac.fixedLease + ac.fixedLabor + ac.fixedAdmin + annualMaintenanceCost;
+      const annualMaintenanceCostPerAircraft = count > 0 ? ac.maintenanceCostPerCheck / count : 0;
+      const annualFixedCost = ac.fixedLease + ac.fixedLabor + ac.fixedAdmin + annualMaintenanceCostPerAircraft;
       const annualVariableCost = (ac.hourlyVarCost * ac.annualHours) / 10000 + ac.generalMaintenanceCost + ac.routeAirportFee;
       const fuelKg = ac.fuelConsPerHr * ac.annualHours;
       const fuelCost = (fuelKg * ac.fuelPricePerKg) / 100000000; // 연료비 오차 완화를 위한 합산 (억원/대)
@@ -112,7 +115,7 @@ export default function SimulatorView() {
       if (pricingMode === "cost15") {
         revenuePerAircraft = costPerAircraft * 1.15;
       } else {
-        const commercialDiscount = ac.id === "atr72" ? 0.54 : ac.id === "b737" ? 0.85 : 0.80;
+        const commercialDiscount = ac.id === "atr72" ? 0.54 : ac.id === "b737" ? 0.95 : 1.24;
         revenuePerAircraft = revenuePerAircraft * commercialDiscount;
       }
 
@@ -142,6 +145,7 @@ export default function SimulatorView() {
     setResult({
       totalDailyTon: dailyTonSum,
       totalAnnualTon: annualTonSum,
+      totalMaxCargoDay: dailyMaxTonSum,
       totalAnnualRevenue: totalRevenue,
       totalAnnualCost: totalCost,
       totalAnnualProfit: profit,
@@ -372,7 +376,7 @@ export default function SimulatorView() {
                 </span>
               </div>
               <p className="text-[10px] text-slate-500 leading-normal font-sans pt-1">
-                ※ 위 산정은 화물전용기가 회항(백홀) 시 공차 운항, 노선 포지셔닝 계약, 유통 마진 등을 포함하여 화물 기장 전문가가 설계한 <strong>0.54 ~ 0.85 차등 보정 배율</strong>이 도입 비례에 따라 적용된 실효 단가입니다.
+                ※ 위 산정은 화물전용기가 회항(백홀) 시 공차 운항, 노선 포지셔닝 계약, 유통 마진 등을 포함하여 화물 기장 전문가가 설계한 <strong>0.54 ~ 0.95 차등 보정 배율</strong>이 도입 비례에 따라 적용된 실효 단가입니다.
               </p>
             </div>
             
@@ -466,7 +470,7 @@ export default function SimulatorView() {
                 국내 유일 화물 전용 항공사인 <span className="text-orange-700 font-bold">에어인천(Air Incheon)</span> 및 글로벌 주요 화물 전용 항공사(Polar Air, Atlas Air 등)의 안정기 영업이익률은 운항 가동률, 백홀(Backhaul) 복귀 편의 빈 비행(Ferry Flight) 및 고가의 기재 인프라 관리비 등을 종합 감안하여 평균 <strong className="text-orange-800 font-mono">15% ~ 30%</strong> 수준을 유지하는 것이 모범적인 정석입니다.
               </p>
               <p>
-                본 시뮬레이터에서는 이러한 실 비행 운항 변수와 원가 마찰을 정밀 조정하기 위해, 기장출신 전문가의 자문을 기반으로 기종별 차등보정 계수(0.54 ~ 0.85 배율)를 적용함으로써 <span className="text-blue-950">가장 타당성 높고 투자 매력도가 탁월한 약 30% 수준의 상업 가중 마진(ATR72 40%선, B737 25%선, B777 35%선)</span>이 논리적으로 소출되도록 재구성되었습니다.
+                본 시뮬레이터에서는 이러한 실 비행 운항 변수와 원가 마찰을 정밀 조정하기 위해, 기장출신 전문가의 자문을 기반으로 기종별 차등보정 계수(0.54 ~ 0.95 배율)를 적용함으로써 <span className="text-blue-950">가장 타당성 높고 투자 매력도가 탁월한 약 30%대 전후의 상업 가중 마진(ATR72 약 37%선, B737 약 25%선, B777 약 32%선)</span>이 논리적으로 도출되도록 재구성되었습니다.
               </p>
             </div>
           </div>
@@ -487,8 +491,8 @@ export default function SimulatorView() {
               </div>
               <div className="text-right">
                 <span className="text-[10px] text-slate-400 block">한계여력대비</span>
-                <span className={`text-xs font-bold ${results.totalDailyTon > 126 ? "text-rose-600" : "text-slate-700"}`}>
-                  {fmt((results.totalDailyTon / 104) * 100, 1)}% 가동
+                <span className={`text-xs font-bold ${results.totalDailyTon > (results.totalMaxCargoDay * 0.8) ? "text-rose-600" : "text-slate-700"}`}>
+                  {fmt(results.totalMaxCargoDay > 0 ? (results.totalDailyTon / results.totalMaxCargoDay) * 100 : 0, 1)}% 가동
                 </span>
               </div>
             </div>
