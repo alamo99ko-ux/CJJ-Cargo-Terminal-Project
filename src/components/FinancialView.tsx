@@ -4,19 +4,32 @@ import { Printer } from 'lucide-react';
 
 const fmt = (num: number, fractionDigits: number = 1): string => {
   const str = num.toFixed(fractionDigits);
-  if (str.includes('.')) {
-    const parts = str.split('.');
-    let decimals = parts[1];
+  const [integerPart, decimalPart] = str.split('.');
+
+  // Add commas to the integer part
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  if (decimalPart) {
+    let decimals = decimalPart;
     while (decimals.endsWith('0')) {
       decimals = decimals.slice(0, -1);
     }
-    return decimals.length > 0 ? `${parts[0]}.${decimals}` : parts[0];
+    return decimals.length > 0 ? `${formattedInteger}.${decimals}` : formattedInteger;
   }
-  return str;
+
+  return formattedInteger;
 };
 
 export default function FinancialView() {
   const [showBasis, setShowBasis] = React.useState(false);
+  const basisRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (showBasis && basisRef.current) {
+      basisRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [showBasis]);
+
   const fleetCounts = { atr72: 2, b737: 2, b777: 2 };
 
   const financialData = AIRCRAFT_DATA.map(ac => {
@@ -393,7 +406,7 @@ export default function FinancialView() {
       </div>
       
       {/* 화물 종류별 성격 및 kg당 평균 매출 단가 산정식 명시 */}
-      <div className={`mt-6 p-5 bg-slate-50 border border-slate-200 rounded-none text-xs text-slate-700 space-y-3.5 print:block ${showBasis ? 'block' : 'hidden'}`}>
+      <div ref={basisRef} className={`mt-6 p-5 bg-slate-50 border border-slate-200 rounded-none text-xs text-slate-700 space-y-3.5 print:block ${showBasis ? 'block' : 'hidden'}`}>
         <h4 className="font-bold font-serif text-sm text-slate-900 flex items-center gap-1.5">
           <span>💡 화물 종류별 비중 및 가중 평균단가(원/kg) 산출 기준 및 공식</span>
         </h4>

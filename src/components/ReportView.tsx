@@ -90,7 +90,7 @@ export default function ReportView() {
   return (
     <div className="bg-white rounded-none shadow-sm border border-slate-200 overflow-hidden" id="report-view-container">
       {/* 액션 헤더 */}
-      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex flex-wrap gap-3 items-center justify-between">
+      <div className="bg-slate-50 print:bg-white px-6 py-4 border-b border-slate-200 flex flex-wrap gap-3 items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-slate-700" />
           <span className="font-bold text-slate-800 tracking-tight font-serif text-sm">공식 정책 건의서 (DOC 한글/워드 원본 서식)</span>
@@ -170,7 +170,7 @@ export default function ReportView() {
 
           {/* 본문 단락 */}
           <div className="space-y-6 text-slate-800 text-justify">
-            <div className="bg-slate-50 border-l-4 border-blue-600 p-4 mb-6">
+            <div className="bg-slate-50 print:bg-white border-l-4 border-blue-600 p-4 mb-6">
               <p className="font-bold text-slate-950 mb-1 flex items-center gap-1.5 font-serif text-sm">
                 <AlertTriangle className="h-4 w-4 text-amber-500" />
                 전문가 오피니언 고승희 기장 (30년 운항 경력 조종사):
@@ -199,7 +199,7 @@ export default function ReportView() {
             <div className="overflow-x-auto my-4">
               <table className="w-full text-xs border-collapse border border-slate-300">
                 <thead>
-                  <tr className="bg-slate-100 text-slate-800">
+                  <tr className="bg-slate-100 print:bg-white text-slate-800">
                     <th className="border border-slate-300 p-2 text-left">구분</th>
                     <th className="border border-slate-300 p-2 text-center">청주국제공항 현황</th>
                     <th className="border border-slate-300 p-2 text-center">인천국제공항 현황</th>
@@ -208,34 +208,34 @@ export default function ReportView() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-slate-300 p-2 font-bold bg-slate-50">활주로 길이</td>
-                    <td className="border border-slate-300 p-2 text-center font-bold text-rose-700 font-mono">2,743m (9,000 ft)</td>
+                    <td className="border border-slate-300 p-2 font-bold bg-slate-50 print:bg-white">활주로 길이</td>
+                    <td className="border border-slate-300 p-2 text-center font-bold text-rose-700 font-mono">2,743m <br/> (9,000 ft)</td>
                     <td className="border border-slate-300 p-2 text-center font-mono">3,750m ~ 4,000m</td>
                     <td className="border border-slate-300 p-2">화물 중량 탑재 후 연료는 중간 급유지 경유(앵커리지, 알마티) 기준 45%만 실으므로 2,743m 활주로에서 즉시 상용 대형 화물기 운전 완전 가능.</td>
                   </tr>
                   <tr>
-                    <td className="border border-slate-300 p-2 font-bold bg-slate-50">화물터미널 규모</td>
+                    <td className="border border-slate-300 p-2 font-bold bg-slate-50 print:bg-white">화물터미널 규모</td>
                     <td className="border border-slate-300 p-2 text-center font-bold text-rose-700 font-mono">2,257 ㎡</td>
                     <td className="border border-slate-300 p-2 text-center font-mono">1,219,896 ㎡</td>
-                    <td className="border border-slate-300 p-2">현재 화물터미널 처리 역량은 <strong>연간 약 3.8만 톤(38,000톤)</strong>으로 초기 거점 육성 기가에는 완전히 차고 넘치는 여력.</td>
+                    <td className="border border-slate-300 p-2">현재 화물터미널 처리 역량은 <strong>연간 약 38,000톤</strong>으로 초기 거점 육성 기가에는 완전히 차고 넘치는 여력.</td>
                   </tr>
                   <tr>
-                    <td className="border border-slate-300 p-2 font-bold bg-slate-50 font-serif">처리 목표 역량</td>
-                    <td className="border border-slate-300 p-2 text-center font-bold text-blue-700 font-mono">연간 16만 톤 (160,000톤) 목표</td>
-                    <td className="border border-slate-300 p-2 text-center font-mono">약 272만 톤 (가용 실적)</td>
-                    <td className="border border-slate-300 p-2">인근 핵심 반도체/바이오 수출입 화물 수송 및 수도권 배후 유치 시, <strong>향후 년간 16만톤 처리능력 목표</strong> 달성이 무리 없이 가능함.</td>
+                    <td className="border border-slate-300 p-2 font-bold bg-slate-50 print:bg-white font-serif">처리 목표 역량</td>
+                    <td className="border border-slate-300 p-2 text-center font-bold text-blue-700 font-mono">연간 16만톤 목표</td>
+                    <td className="border border-slate-300 p-2 text-center font-mono">약 272만톤 <br/> (가용 실적)</td>
+                    <td className="border border-slate-300 p-2">인근 핵심 반도체/바이오 수출입 화물 수송 및 수도권 배후 유치 시, <strong>향후 연간 16만톤 처리능력 목표</strong> 달성이 무리 없이 가능함.</td>
                   </tr>
                   <tr>
-                    <td className="border border-slate-300 p-2 font-bold bg-slate-50">야간 통행(Curfew)</td>
-                    <td className="border border-slate-300 p-2 text-center text-green-700 font-bold">제한 없음 (24시간 가능)</td>
-                    <td className="border border-slate-300 p-2 text-center">제한 없음 (24시간 가능)</td>
+                    <td className="border border-slate-300 p-2 font-bold bg-slate-50 print:bg-white">야간 통행(Curfew)</td>
+                    <td className="border border-slate-300 p-2 text-center text-green-700 font-bold">제한 없음<br/> (24시간 가능)</td>
+                    <td className="border border-slate-300 p-2 text-center">제한 없음<br/> (24시간 가능)</td>
                     <td className="border border-slate-300 p-2"> 초저녁과 새벽시간대 화물슬롯 활용이 가능하며, 전투기여객기 슬럿시간과 충돌이 없이 운영가능함</td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <p>
-              한국은행 충북본부조사자료에 분석된 구조적 명분에 의하면, 인천공항 화물 처리량 중 단순 출도착 O&D(Origin & Destination: 기점 및 종점) 화물량(약 183만 톤)의 1~3%만 청주로 선제 유입 조율하여 유치하여도 <strong>연간 1.8만 톤에서 최대 5.5만 톤 규모(일일 50~150톤)</strong>로 청주공항 자체 항공화물이 즉시 점프할 수 있으며, 인근 배후권을 모두 장악하여 통합 브릿지하면 <strong>16만톤 달성</strong>의 물류 흐름이 정량 시나리오로 입증됩니다.
+              한국은행 충북본부조사자료에 분석된 구조적 명분에 의하면, 인천공항 화물 처리량 중 단순 출도착 O&D(Origin & Destination: 기점 및 종점) 화물량(약 1,830,000톤)의 1~3%만 청주로 선제 유입 조율하여 유치하여도 <strong>연간 18,000톤에서 최대 55,000톤 규모(일일 50~150톤)</strong>로 청주공항 자체 항공화물이 즉시 점프할 수 있으며, 인근 배후권을 모두 장악하여 통합 브릿지하면 <strong>16만톤 달성</strong>의 물류 흐름이 정량 시나리오로 입증됩니다.
             </p>
 
             <h2 className="text-base font-bold text-slate-950 border-b border-slate-300 pb-1 pt-4 font-serif">
@@ -291,7 +291,7 @@ export default function ReportView() {
             <h2 className="text-base font-bold text-slate-950 border-b border-slate-300 pb-1 pt-4 font-serif">
               Ⅵ. 마스터 결론
             </h2>
-            <p className="font-sans font-extrabold text-slate-950 text-center py-5 px-6 bg-blue-50/50 rounded-sm border-2 border-blue-300 text-base md:text-lg leading-relaxed shadow-sm">
+            <p className="font-sans font-extrabold text-slate-950 text-center py-5 px-6 bg-blue-50/50 print:bg-white rounded-sm border-2 border-blue-300 text-base md:text-lg leading-relaxed shadow-sm">
               “청주국제공항 항공물류의 미래는 신설 활주로의 중장기적 추진과 화물터미널의 즉각적인 개방 가동을 상호 보완적으로 결합함에 있으며, 지자체가 보증하고 전문 운항사와 화주 포워더가 삼각 협치하는 준공공 거버넌스(SPC) 수립에 있습니다.”
             </p>
           </div>

@@ -106,7 +106,7 @@ export default function FaqView() {
       <div className="bg-white rounded-none shadow-sm border border-slate-200 p-6 md:p-8" id="faq-section">
       <div className="flex items-center gap-2 mb-6 border-b border-slate-100 pb-3">
         <HelpCircle className="h-5 w-5 text-slate-700" />
-        <h3 className="font-bold text-slate-900 text-sm font-serif">충북도정 및 관계기관 설득을 위한 안보/정책 핵심 11문 11답</h3>
+        <h3 className="font-bold text-slate-900 text-sm font-serif">청주공항 관계기관 상호이해를 위한 정책 핵심 11문 11답</h3>
       </div>
 
       <div className="space-y-4">
@@ -115,6 +115,8 @@ export default function FaqView() {
           return (
             <div
               key={idx}
+              onMouseEnter={() => !openIndices.includes(idx) && toggleFaq(idx)}
+              onMouseLeave={() => openIndices.includes(idx) && toggleFaq(idx)}
               className={`border transition-all rounded-none ${
                 isOpen ? "border-slate-800 bg-slate-50/50" : "border-slate-200 bg-white"
               }`}
@@ -132,8 +134,8 @@ export default function FaqView() {
                 )}
               </button>
               <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  isOpen ? "max-h-[500px] opacity-100 border-t border-slate-200" : "max-h-0 opacity-0"
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                  isOpen ? "max-h-screen opacity-100 border-t border-slate-200" : "max-h-0 opacity-0"
                 }`}
               >
                 <div className="px-5 py-4 text-slate-750 text-xs md:text-sm leading-relaxed text-justify whitespace-pre-line bg-white">

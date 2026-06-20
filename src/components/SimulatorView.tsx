@@ -4,15 +4,20 @@ import { Calculator, Users, DollarSign, ArrowRight, ShieldAlert, Award, Printer 
 
 const fmt = (num: number, fractionDigits: number = 1): string => {
   const str = num.toFixed(fractionDigits);
-  if (str.includes('.')) {
-    const parts = str.split('.');
-    let decimals = parts[1];
+  const [integerPart, decimalPart] = str.split('.');
+  
+  // Add commas to the integer part
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  
+  if (decimalPart) {
+    let decimals = decimalPart;
     while (decimals.endsWith('0')) {
       decimals = decimals.slice(0, -1);
     }
-    return decimals.length > 0 ? `${parts[0]}.${decimals}` : parts[0];
+    return decimals.length > 0 ? `${formattedInteger}.${decimals}` : formattedInteger;
   }
-  return str;
+  
+  return formattedInteger;
 };
 
 export default function SimulatorView() {
@@ -375,8 +380,8 @@ export default function SimulatorView() {
                   {(results?.avgRevenuePerKg || 1532).toLocaleString()}원/kg
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 leading-normal font-sans pt-1">
-                ※ 위 산정은 화물전용기가 회항(백홀) 시 공차 운항, 노선 포지셔닝 계약, 유통 마진 등을 포함하여 화물 기장 전문가가 설계한 <strong>0.54 ~ 0.95 차등 보정 배율</strong>이 도입 비례에 따라 적용된 실효 단가입니다.
+              <p className="text-[10px] text-slate-500 leading-normal font-sans pt-3 border-t border-emerald-100">
+                ※ 위 산정은 화물전용기가 회항(백홀) 시 공차 운항, 노선 포지셔닝 계약, 유통 마진 등을 포함하여 화물 기장 전문가가 설계한 <strong>0.54 ~ 0.95 차등 보정 배율</strong>이 도입 비례에 따라 적용된 실효 단가입니다. 화물기 평균단가(약 1,987원/kg)와 특정 품목 단가(예: 신선화물 2,548원/kg 내외)의 차이는 화물 종류별 가중치, 상업적 할인율, 그리고 실제 운항 경로상의 화물 탑재 최적화 과정에서 발생하는 통계적 밴드범위입니다.
               </p>
             </div>
             
