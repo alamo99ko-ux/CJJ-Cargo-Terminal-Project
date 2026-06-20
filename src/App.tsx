@@ -43,26 +43,26 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans block text-slate-900 selection:bg-slate-200">
+    <div className="min-h-screen bg-slate-50 print:bg-white font-sans block text-slate-900 selection:bg-slate-200">
       {/* 최고급 정책 자문용 헤더 - Editorial/Strategic Edition */}
-      <header className="bg-blue-50 text-blue-900 border-b border-blue-200 sticky top-0 z-50 shadow-sm" id="main-header">
+      <header className="bg-blue-50 print:bg-white text-blue-900 print:text-slate-900 border-b border-blue-200 print:border-slate-300 sticky top-0 z-50 shadow-sm" id="main-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="bg-blue-600 p-2.5 rounded-sm text-white shadow-sm shrink-0">
+            <div className="bg-blue-600 print:bg-slate-800 p-2.5 rounded-sm text-white shadow-sm shrink-0">
               <Plane className="h-6 w-6 transform rotate-45" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="bg-blue-500/10 text-blue-700 text-[10px] tracking-widest font-mono font-bold px-2.5 py-0.5 rounded-sm uppercase">
+                <span className="bg-blue-500/10 print:bg-slate-100 text-blue-700 print:text-slate-700 text-[10px] tracking-widest font-mono font-bold px-2.5 py-0.5 rounded-sm uppercase">
                   Strategic Proposal | 2026.06
                 </span>
-                <span className="flex items-center gap-0.5 text-[10px] text-blue-800 bg-blue-500/10 px-2 py-0.5 rounded-sm border border-blue-500/20 font-mono uppercase tracking-widest">
+                <span className="flex items-center gap-0.5 text-[10px] text-blue-800 print:text-slate-800 bg-blue-500/10 print:bg-slate-100 px-2 py-0.5 rounded-sm border border-blue-500/20 print:border-slate-300 font-mono uppercase tracking-widest">
                   <Sparkles className="h-3 w-3" />
                   PROPOSAL ADVISORY
                 </span>
               </div>
-              <h1 className="text-xl md:text-2xl font-black text-blue-950 tracking-tight mt-1 font-serif">
-                Cheongju Airport (CJJ) Cargo Hub Strategy <span className="font-sans text-sm font-normal text-blue-700">| 청주국제공항 항공물류 활성화</span>
+              <h1 className="text-xl md:text-2xl font-black text-blue-950 print:text-slate-950 tracking-tight mt-1 font-serif">
+                Cheongju Airport (CJJ) Cargo Hub Strategy <span className="font-sans text-sm font-normal text-blue-700 print:text-slate-600">| 청주국제공항 항공물류 활성화</span>
               </h1>
             </div>
           </div>
@@ -70,8 +70,8 @@ export default function App() {
           {/* 컨설턴트 및 조종사 정보 */}
           <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
             <div className="text-left md:text-right border-l-2 md:border-l-0 md:border-r-2 border-slate-300 pl-3 md:pl-0 md:pr-4 py-0.5 max-w-sm">
-              <p className="text-xs font-bold text-blue-950 leading-tight font-serif italic">Prepared by Seunghee Ko</p>
-              <p className="text-[10px] text-blue-600 font-sans uppercase tracking-widest mt-1">
+              <p className="text-xs font-bold text-blue-950 print:text-slate-900 leading-tight font-serif italic">Prepared by Seunghee Ko</p>
+              <p className="text-[10px] text-blue-600 print:text-slate-600 font-sans uppercase tracking-widest mt-1">
                 고승희 기장 · 30년 운항 경력 조종사
               </p>
             </div>
