@@ -58,18 +58,19 @@
   
   /* 헤더와 요약본이 A4 한 장에 온전히 잘 들어가도록 여백 및 폰트 크기 조정 */
   body.print-summary-mode #main-header {
-    background-color: #0f172a !important; /* slate-900 */
-    color: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1e3a8a !important; /* dark blue */
     padding: 8mm !important;
-    border-bottom: 4px solid #2563eb !important;
+    border-bottom: 2px solid #1e3a8a !important;
     margin-bottom: 5mm !important;
   }
 
   body.print-summary-mode #main-header span,
   body.print-summary-mode #main-header h1,
   body.print-summary-mode #main-header p {
-    color: #ffffff !important;
+    color: #1e3a8a !important;
   }
+
 
   body.print-summary-mode #main-header .text-slate-400 {
     color: #cbd5e1 !important;

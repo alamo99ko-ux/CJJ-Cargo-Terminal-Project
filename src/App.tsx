@@ -48,7 +48,7 @@ export default function App() {
       <header className="bg-blue-50 print:bg-white text-blue-900 print:text-slate-900 border-b border-blue-200 print:border-slate-300 sticky top-0 z-50 shadow-sm" id="main-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="bg-blue-600 print:bg-slate-800 p-2.5 rounded-sm text-white shadow-sm shrink-0">
+            <div className="bg-blue-600 print:bg-slate-100 p-2.5 rounded-sm text-white print:text-blue-900 shadow-sm shrink-0 border print:border-slate-300">
               <Plane className="h-6 w-6 transform rotate-45" />
             </div>
             <div>
